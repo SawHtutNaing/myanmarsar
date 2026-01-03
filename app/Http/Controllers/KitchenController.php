@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Table;
 use Illuminate\Http\Request;
 
 class KitchenController extends Controller
@@ -19,19 +20,31 @@ class KitchenController extends Controller
 
     public function fetchOrders()
     {
-        $orders = Order::with('orderItems.foodItem')
-            ->whereIn('status', ['pending', 'preparing'])
-            ->get();
-
+        $orders = Order::where('status', 'pending')->with('orderItems.foodItem')->get();
         return response()->json($orders);
     }
 
-    public function completeOrder(string $id)
+    public function completeOrder(Request $request, $id)
     {
         $order = Order::findOrFail($id);
         $order->status = 'completed';
         $order->save();
 
-        return redirect()->route('kitchen.orders')->with('success', 'Order marked as completed.');
+        // Check if there are any pending orders left for this table
+        // $pendingOrders = Order::where('table_number', $order->table_number)
+        //                       ->where('status', 'pending')
+        //                       ->count();
+
+        // if ($pendingOrders === 0) {
+        //     $table = Table::where('table_number', $order->table_number)->first();
+        //     if ($table) {
+        //         $table->status = 'available';
+        //         $table->save();
+        //     }
+        // }
+
+               return view('kitchen.orders');
+
+
     }
 }

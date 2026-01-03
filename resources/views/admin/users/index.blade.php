@@ -11,9 +11,9 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Users List</h3>
-                        {{-- <a href="{{ route('admin.users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('admin.users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Add User
-                        </a> --}}
+                        </a>
                     </div>
 
                     <table class="min-w-full divide-y divide-gray-200">

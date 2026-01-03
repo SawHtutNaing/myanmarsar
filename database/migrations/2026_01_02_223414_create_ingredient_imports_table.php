@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ingredient_id')->constrained()->onDelete('cascade');
             $table->string('code')->unique();
-            $table->integer('quantity');
+            $table->decimal('quantity');
             $table->decimal('unit_price', 8, 2);
             $table->timestamps();
         });

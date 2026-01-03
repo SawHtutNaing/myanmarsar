@@ -34,7 +34,7 @@ class FoodItemController extends Controller
      $request->validate([
     'name' => 'required|string|max:255',
     'price' => 'required|numeric',
-    'quantity' => 'required|integer',
+
     'description' => 'nullable|string',
     'ingredient_quantities.*' => 'nullable|numeric|min:0',
 ]);
@@ -52,7 +52,7 @@ foreach ($ingredientQuantities as $ingredientId => $quantity) {
             return back()->withErrors(['ingredient_quantities' => 'At least one ingredient with quantity > 0 is required.'])->withInput();
         }
 
-        $foodItem = FoodItem::create($request->only('name', 'price', 'quantity', 'description'));
+        $foodItem = FoodItem::create($request->only('name', 'price', 'description'));
         $foodItem->ingredients()->attach($attachData);
 
         return redirect()->route('admin.fooditems.index')->with('success', 'Food item created successfully.');
@@ -84,7 +84,7 @@ foreach ($ingredientQuantities as $ingredientId => $quantity) {
      $request->validate([
   'name' => 'required|string|max:255',
     'price' => 'required|numeric',
-    'quantity' => 'required|integer',
+
     'description' => 'nullable|string',
     'ingredient_quantities.*' => 'nullable|numeric|min:0',
 ]);
@@ -103,7 +103,7 @@ foreach ($ingredientQuantities as $ingredientId => $quantity) {
         }
 
         $fooditem = FoodItem::findOrFail($id);
-        $fooditem->update($request->only('name', 'price', 'quantity', 'description'));
+        $fooditem->update($request->only('name', 'price',  'description'));
         $fooditem->ingredients()->sync($syncData);
 
         return redirect()->route('admin.fooditems.index')->with('success', 'Food item updated successfully.');

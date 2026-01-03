@@ -14,7 +14,7 @@ class FoodItem extends Model
         'name',
         'price',
         'description',
-        'quantity',
+
     ];
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TableController as AdminTableController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\FoodItemController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\WaiterController;
 use App\Http\Controllers\KitchenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,19 +26,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('ingredients', IngredientController::class);
     Route::resource('fooditems', FoodItemController::class);
     Route::resource('users', UserController::class);
+    Route::resource('tables', AdminTableController::class);
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
 });
-
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 use App\Http\Controllers\TableController;
 
@@ -52,8 +49,10 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::post('/orders', [WaiterController::class, 'storeOrder'])->name('orders.store');
     Route::get('/my-orders', [WaiterController::class, 'orders'])->name('my-orders');
     Route::get('/my-orders/fetch', [WaiterController::class, 'fetchMyOrders'])->name('my-orders.fetch');
-Route::get('tables/{id}/fetch-orders', [TableController::class, 'fetchOrders'])->name('tables.fetchOrders');
-
+    Route::post('/tables/{id}/toggle-status', [TableController::class, 'toggleStatus'])->name('tables.toggleStatus');
+    Route::get('tables/{id}/fetch-orders', [TableController::class, 'fetchOrders'])->name('tables.fetchOrders');
+    Route::get('/orders/add-to-current', [WaiterController::class, 'createAdditionalOrder'])->name('orders.add-to-current');
+    Route::post('/orders/{order}/add-items', [WaiterController::class, 'addItemsToOrder'])->name('orders.add-items');
 });
 
 // Kitchen Routes
@@ -64,6 +63,4 @@ Route::middleware(['auth', 'role:kitchen'])->prefix('kitchen')->name('kitchen.')
     Route::post('/orders/{id}/complete', [KitchenController::class, 'completeOrder'])->name('orders.complete');
 });
 
-
 require __DIR__.'/auth.php';
-

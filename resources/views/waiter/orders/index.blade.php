@@ -22,7 +22,44 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let completedOrders = new Set();
-            const audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'); // Default browser sound
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let audioEnabled = false;
+
+            // Function to resume audio context after user interaction
+            function initAudioContext() {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                        audioEnabled = true;
+                        console.log('Audio context resumed');
+                    }).catch(error => {
+                        console.error('Failed to resume audio context:', error);
+                    });
+                } else if (audioCtx.state === 'running') {
+                    audioEnabled = true;
+                }
+            }
+
+            // Add event listeners for user interaction (e.g., click anywhere on the page)
+            document.body.addEventListener('click', initAudioContext);
+
+            function playSound() {
+                initAudioContext();
+                if (!audioEnabled || audioCtx.state !== 'running') {
+                    console.log('Audio context not running yet - sound skipped until user interaction');
+                    return;
+                }
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                }, 200);
+            }
 
             function fetchMyOrders() {
                 fetch('{{ route('waiter.my-orders.fetch') }}')
@@ -33,7 +70,7 @@
 
                         orders.forEach(order => {
                             if (order.status === 'completed' && !completedOrders.has(order.id)) {
-                                audio.play();
+                                playSound();
                                 completedOrders.add(order.id);
                             }
 
@@ -46,11 +83,16 @@
                             });
                             itemsHtml += '</ul>';
 
+                            // Parse total_price as float if it's a string
+                            const totalPrice = parseFloat(order.total_price);
+                            const formattedTotal = isNaN(totalPrice) ? '0.00' : totalPrice.toFixed(2);
+
                             orderCard.innerHTML = `
                                 <h4 class="font-bold">Order #${order.id}</h4>
                                 <p>Table: ${order.table_number}</p>
                                 <p>Status: ${order.status}</p>
                                 ${itemsHtml}
+                                <p>Total: $${formattedTotal}</p>
                             `;
                             ordersList.appendChild(orderCard);
                         });
@@ -61,5 +103,5 @@
             fetchMyOrders(); // Initial fetch
         });
     </script>
-    
+
 </x-app-layout>

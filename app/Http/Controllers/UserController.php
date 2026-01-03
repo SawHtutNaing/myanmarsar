@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 
 class UserController extends Controller
@@ -23,7 +23,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -31,7 +32,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'roles' => 'required|array',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->roles()->sync($request->roles);
+
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -39,7 +55,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // For a simple CRUD, show is often combined with edit or not needed as a separate view.
+        // We'll redirect to the edit page for viewing/editing for simplicity.
+        return redirect()->route('admin.users.edit', $id);
     }
 
     /**
@@ -59,12 +77,19 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
             'roles' => 'required|array',
         ]);
 
         $user = User::findOrFail($id);
-        $user->update($request->only('name', 'email'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+        
         $user->roles()->sync($request->roles);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');

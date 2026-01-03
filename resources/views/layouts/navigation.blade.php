@@ -31,6 +31,9 @@
                         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                             {{ __('Users') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
+                            {{ __('Tables') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
                             {{ __('Sales Report') }}
                         </x-nav-link>
@@ -44,9 +47,9 @@
                         <x-nav-link :href="route('waiter.menu')" :active="request()->routeIs('waiter.menu')">
                             {{ __('Menu') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('waiter.orders.create')" :active="request()->routeIs('waiter.orders.create')">
+                        {{-- <x-nav-link :href="route('waiter.orders.create')" :active="request()->routeIs('waiter.orders.create')">
                             {{ __('Place Order') }}
-                        </x-nav-link>
+                        </x-nav-link> --}}
                         <x-nav-link :href="route('waiter.my-orders')" :active="request()->routeIs('waiter.my-orders')">
                             {{ __('My Orders') }}
                         </x-nav-link>
@@ -80,12 +83,12 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link href="#">
+                        <x-dropdown-link href="/profile">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
                             <x-dropdown-link href="#"
@@ -116,6 +119,24 @@
             @if(Auth::user()->hasRole('admin'))
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                     {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.ingredients.index')" :active="request()->routeIs('admin.ingredients.index')">
+                    {{ __('Ingredients') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.fooditems.index')" :active="request()->routeIs('admin.fooditems.index')">
+                    {{ __('Food Items') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
+                    {{ __('Tables') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
+                    {{ __('Sales Report') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')">
+                    {{ __('Profit & Loss') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->hasRole('waiter'))
                 <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
