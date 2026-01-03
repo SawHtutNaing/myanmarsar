@@ -53,6 +53,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('tables/{id}/fetch-orders', [TableController::class, 'fetchOrders'])->name('tables.fetchOrders');
     Route::get('/orders/add-to-current', [WaiterController::class, 'createAdditionalOrder'])->name('orders.add-to-current');
     Route::post('/orders/{order}/add-items', [WaiterController::class, 'addItemsToOrder'])->name('orders.add-items');
+    Route::get('/fetch-statuses', [TableController::class, 'fetchTableStatuses'])->name('tables.fetch-statuses');
 });
 
 // Kitchen Routes
@@ -60,7 +61,8 @@ Route::middleware(['auth', 'role:kitchen'])->prefix('kitchen')->name('kitchen.')
     Route::get('/', [KitchenController::class, 'index'])->name('dashboard');
     Route::get('/orders', [KitchenController::class, 'orders'])->name('orders');
     Route::get('/orders/fetch', [KitchenController::class, 'fetchOrders'])->name('orders.fetch');
-    Route::post('/orders/{id}/complete', [KitchenController::class, 'completeOrder'])->name('orders.complete');
+    Route::post('/orders/{orderItemId}/complete-item', [KitchenController::class, 'completeOrderItem'])->name('orders.complete-item');
+    Route::post('/orders/{orderId}/complete', [KitchenController::class, 'completeOrder'])->name('orders.complete-order');
 });
 
 require __DIR__.'/auth.php';

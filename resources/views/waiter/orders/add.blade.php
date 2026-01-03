@@ -1,4 +1,3 @@
-<!-- resources/views/waiter/orders/add.blade.php (new view for adding to current order) -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -10,6 +9,18 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <!-- Display Validation Errors -->
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">Oops! Something went wrong:</strong>
+                            <ul class="mt-2 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <h3 class="text-lg font-bold mb-4">Current Order #{{ $currentOrder->id }} for Table {{ $table_number }}</h3>
                     <div class="mb-6">
                         <h4 class="text-md font-semibold mb-2">Current Items:</h4>
@@ -38,7 +49,7 @@
                                     </div>
                                     <div class="flex items-center">
                                         <button type="button" onclick="decrementQty({{ $fooditem->id }})" class="bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-2 rounded-l">-</button>
-                                        <input type="number" name="items[{{ $fooditem->id }}]" id="qty_{{ $fooditem->id }}" value="0" min="0" class="w-16 text-center border-t border-b border-gray-300" readonly>
+                                        <input type="number" name="items[{{ $fooditem->id }}]" id="qty_{{ $fooditem->id }}" value="{{ old('items.'.$fooditem->id, 0) }}" min="0" class="w-16 text-center border-t border-b border-gray-300" readonly>
                                         <button type="button" onclick="incrementQty({{ $fooditem->id }})" class="bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-2 rounded-r">+</button>
                                     </div>
                                 </div>
@@ -51,6 +62,9 @@
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Add Items
                             </button>
+                            <a href="{{ route('waiter.tables.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2">
+                                Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -83,5 +97,10 @@
                 updateTotal();
             }
         }
+
+        // Initialize total on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTotal();
+        });
     </script>
 </x-app-layout>

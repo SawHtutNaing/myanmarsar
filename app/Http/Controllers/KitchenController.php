@@ -20,31 +20,82 @@ class KitchenController extends Controller
 
     public function fetchOrders()
     {
-        $orders = Order::where('status', 'pending')->with('orderItems.foodItem')->get();
+        $orders = Order::whereHas('orderItems', function ($query) {
+            $query->whereIn('status', ['pending']);
+
+        })->with('orderItems.foodItem')->get();
         return response()->json($orders);
     }
 
-    public function completeOrder(Request $request, $id)
+    public function completeOrderItem(Request $request, $orderItemId)
     {
-        $order = Order::findOrFail($id);
-        $order->status = 'completed';
+        $orderItem = \App\Models\OrderItem::findOrFail($orderItemId);
+        $orderItem->status = 'served';
+        $orderItem->save();
+
+        $order = $orderItem->order;
+
+        // --- Cross-user notification for waiter (using Cache) ---
+        $waiterId = $order->user_id; // Assuming order belongs to the waiter who placed it
+        $foodItemName = $orderItem->foodItem->name ?? 'Unknown Item';
+        $tableNumber = $order->table_number ?? 'Unknown Table';
+
+        $notificationData = [
+            'id' => $orderItem->id, // Use order_item_id to track
+            'type' => 'food_item_ready',
+            'message' => "Order #{$order->id}: {$foodItemName} for Table {$tableNumber} is ready!",
+            'order_id' => $order->id,
+            'table_number' => $tableNumber,
+            'food_item_name' => $foodItemName,
+            'timestamp' => now()->toDateTimeString(),
+        ];
+
+        // Store notification in cache for the specific waiter
+        \Illuminate\Support\Facades\Cache::forever("waiter_notification:{$waiterId}", $notificationData);
+        // --- End cross-user notification ---
+
+
+        // Check if all order items for this order are now served
+        $allServed = $order->orderItems->every(function ($item) {
+            return $item->status === 'served';
+        });
+
+        if ($allServed) {
+            $order->status = 'served';
+            $order->save();
+        }
+
+                return view('kitchen.orders');
+
+    }
+
+    public function completeOrder(Request $request, $orderId)
+    {
+        $order = \App\Models\Order::findOrFail($orderId);
+        $order->status = 'served'; // Consistency: changed from 'completed' to 'served'
         $order->save();
 
-        // Check if there are any pending orders left for this table
-        // $pendingOrders = Order::where('table_number', $order->table_number)
-        //                       ->where('status', 'pending')
-        //                       ->count();
+        // Optionally, mark all associated order items as served
+        foreach ($order->orderItems as $orderItem) {
+            $orderItem->status = 'served';
+            $orderItem->save();
+        }
 
-        // if ($pendingOrders === 0) {
-        //     $table = Table::where('table_number', $order->table_number)->first();
-        //     if ($table) {
-        //         $table->status = 'available';
-        //         $table->save();
-        //     }
-        // }
+        // --- Cross-user notification for waiter (using Cache) ---
+        $waiterId = $order->user_id;
+        $tableNumber = $order->table_number ?? 'Unknown Table';
+        $notificationData = [
+            'id' => $order->id, // Use order_id to track
+            'type' => 'order_ready',
+            'message' => "Order #{$order->id} for Table {$tableNumber} is completed by the kitchen!",
+            'order_id' => $order->id,
+            'table_number' => $tableNumber,
+            'timestamp' => now()->toDateTimeString(),
+        ];
+        \Illuminate\Support\Facades\Cache::forever("waiter_notification:{$waiterId}:order_complete", $notificationData);
+        // --- End cross-user notification ---
 
-               return view('kitchen.orders');
-
-
+        // Redirect back or return a success response
+        return redirect()->route('kitchen.orders')->with('success', 'Order ' . $order->id . ' marked as served.');
     }
 }

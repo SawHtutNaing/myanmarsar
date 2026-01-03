@@ -13,4 +13,7 @@ class Table extends Model
         'table_number',
         'status',
     ];
+    public function orders(){
+        return $this->hasMany(Order::class, 'table_number', 'table_number');
+    }
 }
