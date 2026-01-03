@@ -29,6 +29,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('tables', AdminTableController::class);
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
+    Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
 });
 
 Route::middleware('auth')->group(function () {

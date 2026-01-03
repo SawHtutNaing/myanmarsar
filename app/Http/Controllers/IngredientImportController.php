@@ -21,6 +21,7 @@ class IngredientImportController extends Controller
             'code' => 'required|string|unique:ingredient_imports,code',
             'quantity' => 'required|integer',
             'unit_price' => 'required|numeric',
+            'date' => 'required|date',
         ]);
 
         IngredientImport::create($request->all());

@@ -40,6 +40,9 @@
                         <x-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')">
                             {{ __('Profit & Loss') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('admin.reports.ingredient-imports')">
+                            {{ __('Ingredient Imports') }}
+                        </x-nav-link>
                     @elseif(Auth::user()->hasRole('waiter'))
                         <x-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
                             {{ __('Dashboard') }}
@@ -137,6 +140,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')">
                     {{ __('Profit & Loss') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('admin.reports.ingredient-imports')">
+                    {{ __('Ingredient Imports') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->hasRole('waiter'))
                 <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">

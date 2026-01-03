@@ -25,4 +25,26 @@ class ReportController extends Controller
 
         return view('admin.reports.profit_loss', compact('completedOrders', 'totalRevenue', 'totalCost', 'profit'));
     }
+
+    public function ingredientImportReport(Request $request)
+    {
+        $query = \App\Models\IngredientImport::with('ingredient');
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('date', '<=', $request->end_date);
+        }
+
+        $imports = $query->orderBy('date', 'desc')->get();
+
+        $totalQuantity = $imports->sum('quantity');
+        $totalCost = $imports->sum(function ($import) {
+            return $import->quantity * $import->unit_price;
+        });
+
+        return view('admin.reports.ingredient_imports', compact('imports', 'totalQuantity', 'totalCost'));
+    }
 }
