@@ -34,7 +34,7 @@
             <a href="{{ route('supplier.ingredients.import.create') }}" class="flex items-center justify-center w-full">
         @endif
             <x-application-logo
-                class="h-8 w-auto text-gray-800 transition-all duration-300"
+                class="h-20 w-20 mb-6 text-gray-800 transition-all duration-300"
                 x-show="sidebarOpen"
             />
             <svg

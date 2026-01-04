@@ -1,1 +1,7 @@
-<img src="{{ asset('logo.jpg') }}" alt="App Logo">
+<img
+    {{ $attributes->merge([
+        'src' => asset('logo.jpg'),
+        'alt' => config('app.name'),
+        'class' => 'block'
+    ]) }}
+>
