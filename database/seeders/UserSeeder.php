@@ -37,6 +37,15 @@ class UserSeeder extends Seeder
         ]);
         $admin->roles()->attach($adminRole);
 
+
+              $gm = User::create([
+            'name' => 'GM',
+            'email' => 'gm@example.com',
+            'password' => Hash::make('password'),
+        ]);
+        $gm->roles()->attach($adminRole);
+
+
         $waiter = User::create([
             'name' => 'Waiter User',
             'email' => 'waiter@example.com',
