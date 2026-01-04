@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
+
 
 use App\Models\FoodItem;
 use App\Models\Order;
@@ -9,6 +9,8 @@ use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+
 
 class WaiterController extends Controller
 {
@@ -257,5 +259,109 @@ class WaiterController extends Controller
     {
         $orders = Auth::user()->orders()->with('orderItems.foodItem')->get();
         return response()->json($orders);
+    }
+
+    public function editOrder(Order $order)
+    {
+        $order->load('orderItems.foodItem'); // Eager load order items and their food items
+        return view('waiter.orders.edit', compact('order'));
+    }
+
+    public function updateOrderItems(Request $request, Order $order)
+    {
+        $request->validate([
+            'items' => 'required|array',
+            'items.*' => 'numeric|min:0', // Ensure quantities are non-negative integers
+        ]);
+
+        if ($order->status === 'completed' || $order->status === 'cancelled') {
+            return redirect()->route('waiter.orders.edit', $order->id)
+                             ->with('error', 'Cannot modify a ' . $order->status . ' order.');
+        }
+
+        $newTotalPrice = 0;
+        $foodItemsToProcess = []; // To hold food items that need ingredient adjustments
+
+        foreach ($request->items as $orderItemId => $newQuantity) {
+            $orderItem = OrderItem::where('order_id', $order->id)->where('id', $orderItemId)->first();
+
+            if (!$orderItem) {
+                // If the order item doesn't exist for this order, skip or throw error
+                // For now, let's skip.
+                continue;
+            }
+
+            $oldQuantity = $orderItem->quantity;
+            $quantityDifference = $newQuantity - $oldQuantity;
+
+            // Only proceed if quantity has changed
+            if ($quantityDifference === 0) {
+                $newTotalPrice += $orderItem->price; // Add old price to new total
+                continue;
+            }
+
+            $foodItem = $orderItem->foodItem()->with('ingredients')->first();
+
+            if ($foodItem) {
+                if ($quantityDifference > 0) {
+                    // Quantity increased - check and deduct ingredients
+                    foreach ($foodItem->ingredients as $ingredient) {
+                        $needed = $ingredient->pivot->quantity * $quantityDifference;
+                        if ($ingredient->quantity < $needed) {
+                            throw ValidationException::withMessages([
+                                'items' => "Insufficient ingredients: Not enough {$ingredient->name} available for {$quantityDifference} additional {$foodItem->name}. Available: {$ingredient->quantity}, Required: {$needed}"
+                            ]);
+                        }
+                        // Mark for deduction
+                        $foodItemsToProcess[] = ['type' => 'deduct', 'ingredient' => $ingredient, 'amount' => $needed];
+                    }
+                } else {
+                    // Quantity decreased or removed - restock ingredients
+                    foreach ($foodItem->ingredients as $ingredient) {
+                        $restockAmount = $ingredient->pivot->quantity * abs($quantityDifference);
+                        // Mark for restock
+                        $foodItemsToProcess[] = ['type' => 'restock', 'ingredient' => $ingredient, 'amount' => $restockAmount];
+                    }
+                }
+            }
+
+            if ($newQuantity === 0) {
+                // Remove order item
+                $orderItem->delete();
+            } else {
+                // Update order item quantity and price
+                $orderItem->quantity = $newQuantity;
+                $orderItem->price = $foodItem->price * $newQuantity;
+                // Cost calculation assumes pivot->quantity is the base for cost too
+                $totalCostPerFoodItem = 0;
+                foreach ($foodItem->ingredients as $ingredient) {
+                    $totalCostPerFoodItem += $ingredient->pivot->quantity * $ingredient->unit_price;
+                }
+                $orderItem->cost = $totalCostPerFoodItem * $newQuantity;
+                $orderItem->save();
+                $newTotalPrice += $orderItem->price;
+            }
+        }
+
+        // Apply ingredient changes
+        foreach ($foodItemsToProcess as $item) {
+            if ($item['type'] === 'deduct') {
+                $item['ingredient']->quantity -= $item['amount'];
+            } else { // restock
+                $item['ingredient']->quantity += $item['amount'];
+            }
+            $item['ingredient']->save();
+        }
+
+        // Update total price of the order
+        $order->total_price = $newTotalPrice;
+        // If all items are removed, set order status to cancelled? Or pending?
+        // Let's set it to cancelled if no items are left
+        if ($newTotalPrice === 0 && $order->orderItems()->count() === 0) {
+            $order->status = 'cancelled';
+        }
+        $order->save();
+
+        return redirect()->route('waiter.orders.edit', $order->id)->with('success', 'Order items updated successfully.');
     }
 }

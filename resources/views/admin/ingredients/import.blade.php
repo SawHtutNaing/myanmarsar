@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.ingredients.import.store') }}" method="POST">
+                    <form action="{{ route('supplier.ingredients.import.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <label for="ingredient_id" class="block text-sm font-medium text-gray-700">Ingredient</label>

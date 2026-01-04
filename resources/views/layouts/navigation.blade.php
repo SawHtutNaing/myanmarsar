@@ -34,6 +34,13 @@
                         <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
                             {{ __('Tables') }}
                         </x-nav-link>
+                        
+
+                        <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')">
+                            {{ __('Orders') }}
+                        </x-nav-link>
+
+
                         <x-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
                             {{ __('Sales Report') }}
                         </x-nav-link>
@@ -43,6 +50,16 @@
                         <x-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('admin.reports.ingredient-imports')">
                             {{ __('Ingredient Imports') }}
                         </x-nav-link>
+                        @elseif(Auth::user()->hasRole('supplier'))
+
+<x-nav-link :href="route('supplier.ingredients.import.create')" :active="request()->routeIs('supplier.ingredients.import.create')">
+                            {{ __('Ingredient Import') }}
+                        </x-nav-link>
+<x-nav-link :href="route('supplier.reports.ingredient-imports')" :active="request()->routeIs('supplier.reports.ingredient-imports')">
+                            {{ __('Ingredient Imports') }}
+                        </x-nav-link>
+
+
                     @elseif(Auth::user()->hasRole('waiter'))
                         <x-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
                             {{ __('Dashboard') }}

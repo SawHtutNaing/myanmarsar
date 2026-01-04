@@ -23,3 +23,13 @@ three main roles will work , if you have something uncler you can ask me
 
 and also make sure not to run coposer instsll , npm install , php artisan migrate your self , 
 i will run these , you just need to code , and record the library in the composer .json or packge.json .so that i can run the command 
+
+
+
+
+`supplier အဝယ်စာရင်းဝယ်တာကိုထည့်ပါ
+
+order cancel by admin 
+
+waiter order eidt 
+`

@@ -52,6 +52,13 @@ class TableController extends Controller
         }
 
         $table->save();
+        $currentOrder = $table->orders()->latest()->first();
+
+if ($currentOrder) {
+    $currentOrder->status = 'completed';
+    $currentOrder->save();
+}
+
 
         return response()->json(['table_status' => $table->status]);
     }
@@ -64,7 +71,7 @@ class TableController extends Controller
 
                 $tableData = [];
 
-        
+
 
                 foreach ($tables as $table) {
 
@@ -82,7 +89,7 @@ class TableController extends Controller
 
                     }
 
-        
+
 
                     $tableData[] = [
 
@@ -98,7 +105,7 @@ class TableController extends Controller
 
                 }
 
-        
+
 
                 // --- Fetch and clear notifications for the current waiter ---
 
@@ -106,7 +113,7 @@ class TableController extends Controller
 
                 $waiterId = \Illuminate\Support\Facades\Auth::id();
 
-        
+
 
                 if ($waiterId) {
 
@@ -122,7 +129,7 @@ class TableController extends Controller
 
                     }
 
-        
+
 
                     // Check for full order complete notification
 
@@ -140,7 +147,7 @@ class TableController extends Controller
 
                 // --- End fetch and clear notifications ---
 
-        
+
 
                 return response()->json([
 
@@ -154,6 +161,6 @@ class TableController extends Controller
 
         }
 
-        
 
-    
+
+

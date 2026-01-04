@@ -87,12 +87,18 @@
                             const totalPrice = parseFloat(order.total_price);
                             const formattedTotal = isNaN(totalPrice) ? '0.00' : totalPrice.toFixed(2);
 
+                            let editButtonHtml = '';
+                            if (order.status !== 'completed' && order.status !== 'cancelled') {
+                                editButtonHtml = `<a href="/waiter/orders/${order.id}/edit" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">Edit Order</a>`;
+                            }
+
                             orderCard.innerHTML = `
                                 <h4 class="font-bold">Order #${order.id}</h4>
                                 <p>Table: ${order.table_number}</p>
                                 <p>Status: ${order.status}</p>
                                 ${itemsHtml}
                                 <p>Total: $${formattedTotal}</p>
+                                ${editButtonHtml}
                             `;
                             ordersList.appendChild(orderCard);
                         });

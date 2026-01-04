@@ -21,8 +21,7 @@ use App\Http\Controllers\IngredientImportController;
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-    Route::get('/ingredients/import', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
-    Route::post('/ingredients/import', [IngredientImportController::class, 'store'])->name('ingredients.import.store');
+
     Route::resource('ingredients', IngredientController::class);
     Route::resource('fooditems', FoodItemController::class);
     Route::resource('users', UserController::class);
@@ -30,7 +29,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+    Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('orders.index');
+    Route::patch('/order-items/{orderItem}/cancel', [AdminController::class, 'cancelOrderItem'])->name('order_items.cancel');
 });
+
+Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
+Route::get('/', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
+    Route::post('/ingredients/import', [IngredientImportController::class, 'store'])->name('ingredients.import.store');
+    Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -54,6 +62,8 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('tables/{id}/fetch-orders', [TableController::class, 'fetchOrders'])->name('tables.fetchOrders');
     Route::get('/orders/add-to-current', [WaiterController::class, 'createAdditionalOrder'])->name('orders.add-to-current');
     Route::post('/orders/{order}/add-items', [WaiterController::class, 'addItemsToOrder'])->name('orders.add-items');
+    Route::get('/orders/{order}/edit', [WaiterController::class, 'editOrder'])->name('orders.edit');
+    Route::patch('/orders/{order}/update-items', [WaiterController::class, 'updateOrderItems'])->name('orders.updateItems');
     Route::get('/fetch-statuses', [TableController::class, 'fetchTableStatuses'])->name('tables.fetch-statuses');
 });
 

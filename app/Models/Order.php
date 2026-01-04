@@ -26,6 +26,13 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+
+   public function table(): BelongsTo
+    {
+        return $this->belongsTo(Table::class , 'table_number', 'table_number');
+    }
+
+
     /**
      * The items in the order.
      */
