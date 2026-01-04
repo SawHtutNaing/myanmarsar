@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\TableController as AdminTableController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\ExpenseGroupController; // Added
+use App\Http\Controllers\Admin\ExpenseDetailController; // Added
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\FoodItemController;
 use App\Http\Controllers\UserController;
@@ -26,6 +28,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('fooditems', FoodItemController::class);
     Route::resource('users', UserController::class);
     Route::resource('tables', AdminTableController::class);
+    Route::resource('expense_groups', ExpenseGroupController::class); // Added
+    Route::resource('expense_details', ExpenseDetailController::class); // Added
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
