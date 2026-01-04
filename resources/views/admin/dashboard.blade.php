@@ -32,6 +32,9 @@
                         <a href="{{ route('admin.reports.profit_loss') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                             Profit & Loss Report
                         </a>
+                        <a href="{{ route('admin.reports.table_bill_outs.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            Table Bill Out Records
+                        </a>
                     </div>
                 </div>
             </div>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\TableBillOutRecord; // Added
+use Illuminate\Support\Facades\Auth; // Added
 use Illuminate\Support\Facades\Log;
 
 class TableController extends Controller
@@ -42,6 +44,7 @@ class TableController extends Controller
     public function toggleStatus(string $id)
     {
         $table = Table::findOrFail($id);
+        $oldStatus = $table->status; // Store old status
 
         if ($table->status === 'available') {
             $table->status = 'occupied';
@@ -52,13 +55,28 @@ class TableController extends Controller
         }
 
         $table->save();
-        $currentOrder = $table->orders()->latest()->first();
 
-if ($currentOrder) {
-    $currentOrder->status = 'completed';
-    $currentOrder->save();
-}
-
+        // If table transitioned from occupied to available, and there was a completed order
+                    if ($oldStatus === 'occupied' && $table->status === 'available') {
+                        $currentOrder = Order::where('table_number', $table->table_number)
+                                             ->whereIn('status', ['pending', 'preparing', 'served']) // Only consider active orders
+                                             ->latest()
+                                             ->first();
+        
+                        if ($currentOrder) {
+                            $currentOrder->status = 'completed';
+                            $currentOrder->save();
+        
+                            // Create a TableBillOutRecord
+                            TableBillOutRecord::create([
+                                'user_id' => Auth::id(),
+                                'table_id' => $table->id, // Store table's actual ID
+                                'order_id' => $currentOrder->id,
+                                'total_money' => $currentOrder->total_price,
+                                'billed_at' => now(),
+                            ]);
+                        }
+                    }
 
         return response()->json(['table_status' => $table->status]);
     }

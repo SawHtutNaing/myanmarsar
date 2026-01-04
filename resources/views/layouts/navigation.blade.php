@@ -34,11 +34,15 @@
                         <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
                             {{ __('Tables') }}
                         </x-nav-link>
-                        
+
 
                         <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')">
                             {{ __('Orders') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.reports.table_bill_outs.index')" :active="request()->routeIs('admin.reports.table_bill_outs.index')">
+                            {{ __('Table Bil') }}
+                        </x-nav-link>
+
 
 
                         <x-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">

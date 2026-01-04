@@ -29,7 +29,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+    Route::get('/reports/table-bill-outs', [\App\Http\Controllers\Admin\TableBillOutRecordController::class, 'index'])->name('reports.table_bill_outs.index');
     Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('orders.index');
+
     Route::patch('/order-items/{orderItem}/cancel', [AdminController::class, 'cancelOrderItem'])->name('order_items.cancel');
 });
 
