@@ -9,12 +9,32 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <form action="{{ route('admin.reports.profit_loss') }}" method="GET" class="mb-4">
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start_date" name="start_date" value="{{ request('start_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end_date" name="end_date" value="{{ request('end_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-5">
+                                    Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                     <h3 class="text-lg font-bold mb-4">Profit & Loss Report</h3>
                     <div class="mb-4">
                         <strong>Total Revenue: ${{ number_format($totalRevenue, 2) }}</strong>
                     </div>
                     <div class="mb-4">
                         <strong>Total Cost of Goods Sold: ${{ number_format($totalCost, 2) }}</strong>
+                    </div>
+                    <div class="mb-4">
+                        <strong>Total Expenses: ${{ number_format($totalExpenses, 2) }}</strong>
                     </div>
                     <div class="mb-4">
                         <strong>Profit: ${{ number_format($profit, 2) }}</strong>

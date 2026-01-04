@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\ExpenseDetail;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -15,15 +16,30 @@ class ReportController extends Controller
         return view('admin.reports.sales', compact('completedOrders', 'totalRevenue'));
     }
 
-    public function profitLossReport()
+    public function profitLossReport(Request $request)
     {
-        $completedOrders = Order::where('status', 'completed')->with('orderItems')->get();
+        $queryOrders = Order::where('status', 'completed')->with('orderItems');
+        $queryExpenses = \App\Models\ExpenseDetail::query();
+
+        if ($request->filled('start_date')) {
+            $queryOrders->whereDate('created_at', '>=', $request->start_date);
+            $queryExpenses->whereDate('date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $queryOrders->whereDate('created_at', '<=', $request->end_date);
+            $queryExpenses->whereDate('date', '<=', $request->end_date);
+        }
+
+        $completedOrders = $queryOrders->get();
+        $totalExpenses = $queryExpenses->sum('amount');
         
         $totalRevenue = $completedOrders->sum('total_price');
         $totalCost = $completedOrders->flatMap->orderItems->sum('cost');
-        $profit = $totalRevenue - $totalCost;
 
-        return view('admin.reports.profit_loss', compact('completedOrders', 'totalRevenue', 'totalCost', 'profit'));
+        $profit = $totalRevenue - $totalCost - $totalExpenses;
+
+        return view('admin.reports.profit_loss', compact('completedOrders', 'totalRevenue', 'totalCost', 'totalExpenses', 'profit', 'request'));
     }
 
     public function ingredientImportReport(Request $request)
