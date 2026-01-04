@@ -66,7 +66,7 @@ class IngredientController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:255',
-            'quantity' => 'required|integer',
+            'quantity' => 'required',
             'unit_price' => 'required|numeric',
         ]);
 

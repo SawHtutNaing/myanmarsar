@@ -17,11 +17,11 @@ class IngredientImportController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ingredient_id' => 'required|exists:ingredients,id',
+            'ingredient_id' => 'nullable|exists:ingredients,id',
             'code' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'unit_price' => 'required|numeric',
-            'date' => 'required|date',
+            'quantity' => 'nullable',
+            'unit_price' => 'nullable',
+            'date' => 'nullable|date',
         ]);
 
         IngredientImport::create($request->all());
@@ -31,6 +31,6 @@ class IngredientImportController extends Controller
         $ingredient->unit_price = $request->unit_price;
         $ingredient->save();
 
-        return redirect()->route('supplier.reports.ingredient-imports')->with('success', 'Ingredient imported successfully.');
+        return redirect()->route('admin.ingredients.index')->with('success', 'Ingredient imported successfully.');
     }
 }
