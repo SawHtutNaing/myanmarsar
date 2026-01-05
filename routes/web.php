@@ -33,6 +33,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+    Route::delete('/reports/ingredient-imports/{id}', [ReportController::class, 'destroyIngredientImport'])->name('reports.ingredient-imports.destroy');
     Route::get('/reports/table-bill-outs', [\App\Http\Controllers\Admin\TableBillOutRecordController::class, 'index'])->name('reports.table_bill_outs.index');
     Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('orders.index');
 
@@ -71,6 +72,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/orders/{order}/edit', [WaiterController::class, 'editOrder'])->name('orders.edit');
     Route::patch('/orders/{order}/update-items', [WaiterController::class, 'updateOrderItems'])->name('orders.updateItems');
     Route::get('/fetch-statuses', [TableController::class, 'fetchTableStatuses'])->name('tables.fetch-statuses');
+    Route::post('/orders/items/{id}/take', [WaiterController::class, 'takeOrderItem'])->name('orders.items.take');
 });
 
 // Kitchen Routes

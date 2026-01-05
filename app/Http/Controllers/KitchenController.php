@@ -21,7 +21,7 @@ class KitchenController extends Controller
     public function fetchOrders()
     {
         $orders = Order::whereHas('orderItems', function ($query) {
-            $query->whereIn('status', ['pending']);
+            $query->whereIn('status', ['pending', 'cooked']);
 
         })->with('orderItems.foodItem')->get();
         return response()->json($orders);
@@ -30,7 +30,7 @@ class KitchenController extends Controller
     public function completeOrderItem(Request $request, $orderItemId)
     {
         $orderItem = \App\Models\OrderItem::findOrFail($orderItemId);
-        $orderItem->status = 'served';
+        $orderItem->status = 'cooked';
         $orderItem->save();
 
         $order = $orderItem->order;
@@ -57,11 +57,11 @@ class KitchenController extends Controller
 
         // Check if all order items for this order are now served
         $allServed = $order->orderItems->every(function ($item) {
-            return $item->status === 'served';
+            return $item->status === 'cooked';
         });
 
         if ($allServed) {
-            $order->status = 'served';
+            $order->status = 'cooked';
             $order->save();
         }
 
@@ -72,12 +72,12 @@ class KitchenController extends Controller
     public function completeOrder(Request $request, $orderId)
     {
         $order = \App\Models\Order::findOrFail($orderId);
-        $order->status = 'served'; // Consistency: changed from 'completed' to 'served'
+        $order->status = 'cooked'; // Consistency: changed from 'completed' to 'cooked'
         $order->save();
 
         // Optionally, mark all associated order items as served
         foreach ($order->orderItems as $orderItem) {
-            $orderItem->status = 'served';
+            $orderItem->status = 'cooked';
             $orderItem->save();
         }
 
@@ -96,6 +96,6 @@ class KitchenController extends Controller
         // --- End cross-user notification ---
 
         // Redirect back or return a success response
-        return redirect()->route('kitchen.orders')->with('success', 'Order ' . $order->id . ' marked as served.');
+        return redirect()->route('kitchen.orders')->with('success', 'Order ' . $order->id . ' marked as cooked.');
     }
 }

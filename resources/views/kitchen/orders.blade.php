@@ -94,7 +94,7 @@
                                         <form action="{{ route('kitchen.orders.complete-item', ['orderItemId' => 'ITEM_ID']) }}" method="POST" class="inline-block ml-2" data-item-id="${item.id}">
                                             @csrf
                                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded">
-                                                Mark as Served
+                                                Mark as Cooked
                                             </button>
                                         </form>
                                     ` : ''}
@@ -123,7 +123,7 @@
                                 <form action="{{ route('kitchen.orders.complete-order', ['orderId' => 'ORDER_ID']) }}" method="POST" class="mt-4" data-order-id="${order.id}">
                                     @csrf
                                     <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
-                                        Mark Entire Order as Served
+                                        Mark Entire Order as Cooked
                                     </button>
                                 </form>
                             `;

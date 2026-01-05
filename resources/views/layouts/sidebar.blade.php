@@ -37,16 +37,7 @@
                 class="h-20 w-20 mb-6 text-gray-800 transition-all duration-300"
                 x-show="sidebarOpen"
             />
-            <svg
-                class="h-8 w-auto text-gray-800 transition-all duration-300"
-                x-show="!sidebarOpen"
-                style="display: none;"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+
         </a>
     </div>
 
@@ -130,14 +121,49 @@
             </x-nav-link>
 
             <x-nav-link :href="route('admin.reports.table_bill_outs.index')" :active="request()->routeIs('admin.reports.table_bill_outs.*')" class="flex items-center px-3 py-2">
+             <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300"
+         :class="{'mr-3': sidebarOpen}"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+        <polyline points="14 2 14 7 19 7"></polyline>
+        <line x1="8" y1="13" x2="16" y2="13"></line>
+        <line x1="8" y1="17" x2="14" y2="17"></line>
+    </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Bill Out Records</span>
+            </x-nav-link>
+            <x-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('reports.ingredient-imports')" class="flex items-center px-3 py-2">
+               <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300"
+         :class="{'mr-3': sidebarOpen}"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Import Reports </span>
+            </x-nav-link>
+
+            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('users.index')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Bill Out Records</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">User Management </span>
             </x-nav-link>
+
+
+
         @endif
 
         {{-- SUPPLIER --}}

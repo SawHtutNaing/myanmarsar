@@ -264,7 +264,8 @@ class WaiterController extends Controller
     public function editOrder(Order $order)
     {
         $order->load('orderItems.foodItem'); // Eager load order items and their food items
-        return view('waiter.orders.edit', compact('order'));
+        $fooditems = FoodItem::all();
+        return view('waiter.orders.edit', compact('order', 'fooditems'));
     }
 
     public function updateOrderItems(Request $request, Order $order)
@@ -363,5 +364,24 @@ class WaiterController extends Controller
         $order->save();
 
         return redirect()->route('waiter.orders.edit', $order->id)->with('success', 'Order items updated successfully.');
+    }
+
+    public function takeOrderItem(Request $request, $id)
+    {
+        $orderItem = OrderItem::findOrFail($id);
+        $orderItem->status = 'served';
+        $orderItem->save();
+
+        $order = $orderItem->order;
+        $allServed = $order->orderItems->every(function ($item) {
+            return $item->status === 'served';
+        });
+
+        if ($allServed) {
+            $order->status = 'served';
+            $order->save();
+        }
+
+        return redirect()->route('waiter.my-orders')->with('success', 'Item taken.');
     }
 }

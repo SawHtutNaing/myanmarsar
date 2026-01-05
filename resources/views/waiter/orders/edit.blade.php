@@ -65,9 +65,40 @@
                             <x-primary-button type="submit">
                                 Save Changes
                             </x-primary-button>
-                            <a href="{{ route('waiter.tables.show', ['id' => $order->table_number]) }}" class="ml-4 inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                            <a href="{{ route('waiter.my-orders', ['id' => $order->table_number]) }}" class="ml-4 inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                                 Cancel
                             </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-6">
+
+                    <h3 class="text-lg font-bold mb-4">Add More Items</h3>
+                    <form action="{{ route('waiter.orders.add-items', $order->id) }}" method="POST">
+                        @csrf
+                        <div class="mb-4">
+                            @foreach ($fooditems as $fooditem)
+                                <div class="flex items-center justify-between mb-4 p-4 border rounded-lg">
+                                    <div class="flex-grow">
+                                        <h4 class="font-bold text-md">{{ $fooditem->name }}</h4>
+                                        <p class="text-sm text-gray-600">{{ $fooditem->description }}</p>
+                                        <p class="text-sm font-semibold text-green-600">${{ number_format($fooditem->price, 2) }}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button type="button" onclick="decrementNewQty({{ $fooditem->id }})" class="bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-2 rounded-l">-</button>
+                                        <input type="number" name="items[{{ $fooditem->id }}]" id="new_qty_{{ $fooditem->id }}" value="0" min="0" class="w-16 text-center border-t border-b border-gray-300" readonly>
+                                        <button type="button" onclick="incrementNewQty({{ $fooditem->id }})" class="bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-2 rounded-r">+</button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold">New Items Total: <span id="new_items_total_price">$0.00</span></h3>
+                        </div>
+                        <div>
+                            <x-primary-button type="submit">
+                                Add Items
+                            </x-primary-button>
                         </div>
                     </form>
                 </div>
@@ -107,6 +138,32 @@
             if (parseInt(input.value) > 0) {
                 input.value = parseInt(input.value) - 1;
                 updateOrderItemTotal();
+            }
+        }
+    </script>
+    <script>
+        const newPrices = @json($fooditems->pluck('price', 'id'));
+
+        function updateNewTotal() {
+            let total = 0;
+            for (const id in newPrices) {
+                const qty = parseInt(document.getElementById(`new_qty_${id}`).value) || 0;
+                total += qty * newPrices[id];
+            }
+            document.getElementById('new_items_total_price').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function incrementNewQty(id) {
+            const input = document.getElementById(`new_qty_${id}`);
+            input.value = parseInt(input.value) + 1;
+            updateNewTotal();
+        }
+
+        function decrementNewQty(id) {
+            const input = document.getElementById(`new_qty_${id}`);
+            if (parseInt(input.value) > 0) {
+                input.value = parseInt(input.value) - 1;
+                updateNewTotal();
             }
         }
     </script>

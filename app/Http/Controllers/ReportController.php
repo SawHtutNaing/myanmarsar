@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\ExpenseDetail;
+use App\Models\IngredientImport;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -62,5 +63,16 @@ class ReportController extends Controller
         });
 
         return view('admin.reports.ingredient_imports', compact('imports', 'totalQuantity', 'totalCost'));
+    }
+
+    public function destroyIngredientImport($id)
+    {
+        $import = IngredientImport::findOrFail($id);
+        $ingredient = $import->ingredient;
+        $ingredient->quantity -= $import->quantity;
+        $ingredient->save();
+        $import->delete();
+
+        return redirect()->route('admin.reports.ingredient-imports')->with('success', 'Ingredient import deleted successfully.');
     }
 }
