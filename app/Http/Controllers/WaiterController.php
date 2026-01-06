@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-
 use App\Models\FoodItem;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -10,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-
+use Carbon\Carbon;
 
 class WaiterController extends Controller
 {
@@ -48,9 +47,8 @@ class WaiterController extends Controller
         }
 
         $totalPrice = 0;
-        $itemData = []; // Collect for later creation
+        $itemData = [];
 
-        // First loop: Check quantities and calculate
         foreach ($request->items as $fooditemId => $quantity) {
             $quantity = (int) $quantity;
             if ($quantity > 0) {
@@ -71,7 +69,7 @@ class WaiterController extends Controller
                     'quantity' => $quantity,
                     'price' => $price,
                     'cost' => $cost * $quantity,
-                    'fooditem' => $fooditem, // For deduct loop
+                    'fooditem' => $fooditem,
                 ];
 
                 $totalPrice += $price;
@@ -82,7 +80,6 @@ class WaiterController extends Controller
             return back()->withErrors(['items' => 'At least one item is required.'])->withInput();
         }
 
-        // All checks passed: Create order
         $order = Order::create([
             'user_id' => Auth::id(),
             'table_number' => $request->table_number,
@@ -90,7 +87,6 @@ class WaiterController extends Controller
             'total_price' => $totalPrice,
         ]);
 
-        // Second loop: Create items and deduct ingredients
         foreach ($itemData as $data) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -102,18 +98,11 @@ class WaiterController extends Controller
             ]);
 
             foreach ($data['fooditem']->ingredients as $ingredient) {
-                Log::info('Deducting Ingredient: ' . $ingredient->name);
-                Log::info('Current Quantity: ' . $ingredient->quantity);
-                Log::info('Deduction Amount: ' . ($ingredient->pivot->quantity * $data['quantity']));
-
                 $ingredient->quantity -= $ingredient->pivot->quantity * $data['quantity'];
-
-                Log::info('New Quantity: ' . $ingredient->quantity);
                 $ingredient->save();
             }
         }
 
-        // Update table status
         $table->status = 'occupied';
         $table->save();
 
@@ -135,12 +124,11 @@ class WaiterController extends Controller
             ->first();
 
         if (!$currentOrder) {
-            // If no active order exists, create a new one
             $currentOrder = Order::create([
                 'user_id' => Auth::id(),
                 'table_number' => $table_number,
                 'status' => 'pending',
-                'total_price' => 0, // Initial total price for a new order
+                'total_price' => 0,
             ]);
         }
 
@@ -150,120 +138,127 @@ class WaiterController extends Controller
         return view('waiter.orders.add', compact('fooditems', 'table_number', 'currentOrder', 'currentItems'));
     }
 
-  public function addItemsToOrder(Request $request, string $id)
-{
-    $order = Order::findOrFail($id);
-    $table = Table::where('table_number', $order->table_number)->firstOrFail();
+    public function addItemsToOrder(Request $request, string $id)
+    {
+        $order = Order::findOrFail($id);
+        $table = Table::where('table_number', $order->table_number)->firstOrFail();
 
-    // Validate that at least one item has quantity > 0
-    $hasItems = false;
-    foreach ($request->items ?? [] as $quantity) {
-        if ((int)$quantity > 0) {
-            $hasItems = true;
-            break;
-        }
-    }
-
-    if (!$hasItems) {
-        return back()->withErrors(['items' => 'Please select at least one item to add to the order.'])->withInput();
-    }
-
-    $additionalPrice = 0;
-    $itemData = [];
-
-    // First loop: Check quantities and calculate
-    foreach ($request->items as $fooditemId => $quantity) {
-        $quantity = (int) $quantity;
-        if ($quantity > 0) {
-            $fooditem = FoodItem::with('ingredients')->find($fooditemId);
-
-            if (!$fooditem) {
-                return back()->withErrors(['items' => 'One or more selected items are invalid.'])->withInput();
+        $hasItems = false;
+        foreach ($request->items ?? [] as $quantity) {
+            if ((int)$quantity > 0) {
+                $hasItems = true;
+                break;
             }
+        }
 
-            $price = $fooditem->price * $quantity;
-            $cost = 0;
+        if (!$hasItems) {
+            return back()->withErrors(['items' => 'Please select at least one item to add to the order.'])->withInput();
+        }
 
-            // Check ingredient availability
-            foreach ($fooditem->ingredients as $ingredient) {
-                $needed = $ingredient->pivot->quantity * $quantity;
-                if ($ingredient->quantity < $needed) {
-                    return back()->withErrors([
-                        'items' => "Insufficient ingredients: Not enough {$ingredient->name} available for {$quantity} x {$fooditem->name}. Available: {$ingredient->quantity}, Required: {$needed}"
-                    ])->withInput();
+        $additionalPrice = 0;
+        $itemData = [];
+
+        foreach ($request->items as $fooditemId => $quantity) {
+            $quantity = (int) $quantity;
+            if ($quantity > 0) {
+                $fooditem = FoodItem::with('ingredients')->find($fooditemId);
+
+                if (!$fooditem) {
+                    return back()->withErrors(['items' => 'One or more selected items are invalid.'])->withInput();
                 }
-                $cost += $ingredient->pivot->quantity * $ingredient->unit_price;
+
+                $price = $fooditem->price * $quantity;
+                $cost = 0;
+
+                foreach ($fooditem->ingredients as $ingredient) {
+                    $needed = $ingredient->pivot->quantity * $quantity;
+                    if ($ingredient->quantity < $needed) {
+                        return back()->withErrors([
+                            'items' => "Insufficient ingredients: Not enough {$ingredient->name} available for {$quantity} x {$fooditem->name}. Available: {$ingredient->quantity}, Required: {$needed}"
+                        ])->withInput();
+                    }
+                    $cost += $ingredient->pivot->quantity * $ingredient->unit_price;
+                }
+
+                $itemData[] = [
+                    'food_item_id' => $fooditemId,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'cost' => $cost * $quantity,
+                    'fooditem' => $fooditem,
+                ];
+
+                $additionalPrice += $price;
+            }
+        }
+
+        foreach ($itemData as $data) {
+            $existingItem = OrderItem::where('order_id', $order->id)
+                ->where('food_item_id', $data['food_item_id'])
+                ->whereIn('status', ['pending', 'preparing'])
+                ->first();
+
+            if ($existingItem) {
+                $existingItem->quantity += $data['quantity'];
+                $existingItem->price += $data['price'];
+                $existingItem->cost += $data['cost'];
+                $existingItem->save();
+            } else {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'food_item_id' => $data['food_item_id'],
+                    'quantity' => $data['quantity'],
+                    'price' => $data['price'],
+                    'cost' => $data['cost'],
+                    'status' => 'pending',
+                ]);
             }
 
-            $itemData[] = [
-                'food_item_id' => $fooditemId,
-                'quantity' => $quantity,
-                'price' => $price,
-                'cost' => $cost * $quantity,
-                'fooditem' => $fooditem,
-            ];
-
-            $additionalPrice += $price;
+            foreach ($data['fooditem']->ingredients as $ingredient) {
+                $ingredient->quantity -= $ingredient->pivot->quantity * $data['quantity'];
+                $ingredient->save();
+            }
         }
+
+        $order->total_price += $additionalPrice;
+        $order->save();
+
+        return redirect()->route('waiter.tables.index')
+            ->with('success', "Successfully added items to Order #{$order->id}. New total: $" . number_format($order->total_price, 2));
     }
 
-    // All checks passed: Add items to order
-    foreach ($itemData as $data) {
-        $existingItem = OrderItem::where('order_id', $order->id)
-            ->where('food_item_id', $data['food_item_id'])
-            ->whereIn('status', ['pending', 'preparing'])
-            ->first();
-
-        if ($existingItem) {
-            $existingItem->quantity += $data['quantity'];
-            $existingItem->price += $data['price'];
-            $existingItem->cost += $data['cost'];
-            $existingItem->save();
-        } else {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'food_item_id' => $data['food_item_id'],
-                'quantity' => $data['quantity'],
-                'price' => $data['price'],
-                'cost' => $data['cost'],
-                'status' => 'pending',
-            ]);
-        }
-
-        // Deduct ingredients
-        foreach ($data['fooditem']->ingredients as $ingredient) {
-            Log::info('Deducting Ingredient: ' . $ingredient->name);
-            Log::info('Current Quantity: ' . $ingredient->quantity);
-            Log::info('Deduction Amount: ' . ($ingredient->pivot->quantity * $data['quantity']));
-
-            $ingredient->quantity -= $ingredient->pivot->quantity * $data['quantity'];
-
-            Log::info('New Quantity: ' . $ingredient->quantity);
-            $ingredient->save();
-        }
-    }
-
-    // Update total price
-    $order->total_price += $additionalPrice;
-    $order->save();
-
-    return redirect()->route('waiter.tables.index')
-        ->with('success', "Successfully added items to Order #{$order->id}. New total: $" . number_format($order->total_price, 2));
-}
     public function orders()
     {
         return view('waiter.orders.index');
     }
 
-    public function fetchMyOrders()
+    public function fetchMyOrders(Request $request)
     {
-        $orders = Auth::user()->orders()->with('orderItems.foodItem')->get();
+        $query = Auth::user()->orders()->with('orderItems.foodItem');
+
+        // Apply date filters
+        if ($request->has('date_from') && $request->date_from) {
+            $dateFrom = Carbon::parse($request->date_from)->startOfDay();
+            $query->where('created_at', '>=', $dateFrom);
+        }
+
+        if ($request->has('date_to') && $request->date_to) {
+            $dateTo = Carbon::parse($request->date_to)->endOfDay();
+            $query->where('created_at', '<=', $dateTo);
+        }
+
+        // If no date filters, default to today's orders for performance
+        if (!$request->has('date_from') && !$request->has('date_to')) {
+            $query->whereDate('created_at', Carbon::today());
+        }
+
+        $orders = $query->get();
         return response()->json($orders);
     }
 
     public function editOrder(Order $order)
     {
-        $order->load('orderItems.foodItem'); // Eager load order items and their food items
+        $order->load('orderItems.foodItem');
         $fooditems = FoodItem::all();
         return view('waiter.orders.edit', compact('order', 'fooditems'));
     }
@@ -272,7 +267,7 @@ class WaiterController extends Controller
     {
         $request->validate([
             'items' => 'required|array',
-            'items.*' => 'numeric|min:0', // Ensure quantities are non-negative integers
+            'items.*' => 'numeric|min:0',
         ]);
 
         if ($order->status === 'completed' || $order->status === 'cancelled') {
@@ -281,23 +276,20 @@ class WaiterController extends Controller
         }
 
         $newTotalPrice = 0;
-        $foodItemsToProcess = []; // To hold food items that need ingredient adjustments
+        $foodItemsToProcess = [];
 
         foreach ($request->items as $orderItemId => $newQuantity) {
             $orderItem = OrderItem::where('order_id', $order->id)->where('id', $orderItemId)->first();
 
             if (!$orderItem) {
-                // If the order item doesn't exist for this order, skip or throw error
-                // For now, let's skip.
                 continue;
             }
 
             $oldQuantity = $orderItem->quantity;
             $quantityDifference = $newQuantity - $oldQuantity;
 
-            // Only proceed if quantity has changed
             if ($quantityDifference === 0) {
-                $newTotalPrice += $orderItem->price; // Add old price to new total
+                $newTotalPrice += $orderItem->price;
                 continue;
             }
 
@@ -305,7 +297,6 @@ class WaiterController extends Controller
 
             if ($foodItem) {
                 if ($quantityDifference > 0) {
-                    // Quantity increased - check and deduct ingredients
                     foreach ($foodItem->ingredients as $ingredient) {
                         $needed = $ingredient->pivot->quantity * $quantityDifference;
                         if ($ingredient->quantity < $needed) {
@@ -313,27 +304,21 @@ class WaiterController extends Controller
                                 'items' => "Insufficient ingredients: Not enough {$ingredient->name} available for {$quantityDifference} additional {$foodItem->name}. Available: {$ingredient->quantity}, Required: {$needed}"
                             ]);
                         }
-                        // Mark for deduction
                         $foodItemsToProcess[] = ['type' => 'deduct', 'ingredient' => $ingredient, 'amount' => $needed];
                     }
                 } else {
-                    // Quantity decreased or removed - restock ingredients
                     foreach ($foodItem->ingredients as $ingredient) {
                         $restockAmount = $ingredient->pivot->quantity * abs($quantityDifference);
-                        // Mark for restock
                         $foodItemsToProcess[] = ['type' => 'restock', 'ingredient' => $ingredient, 'amount' => $restockAmount];
                     }
                 }
             }
 
             if ($newQuantity === 0) {
-                // Remove order item
                 $orderItem->delete();
             } else {
-                // Update order item quantity and price
                 $orderItem->quantity = $newQuantity;
                 $orderItem->price = $foodItem->price * $newQuantity;
-                // Cost calculation assumes pivot->quantity is the base for cost too
                 $totalCostPerFoodItem = 0;
                 foreach ($foodItem->ingredients as $ingredient) {
                     $totalCostPerFoodItem += $ingredient->pivot->quantity * $ingredient->unit_price;
@@ -344,20 +329,16 @@ class WaiterController extends Controller
             }
         }
 
-        // Apply ingredient changes
         foreach ($foodItemsToProcess as $item) {
             if ($item['type'] === 'deduct') {
                 $item['ingredient']->quantity -= $item['amount'];
-            } else { // restock
+            } else {
                 $item['ingredient']->quantity += $item['amount'];
             }
             $item['ingredient']->save();
         }
 
-        // Update total price of the order
         $order->total_price = $newTotalPrice;
-        // If all items are removed, set order status to cancelled? Or pending?
-        // Let's set it to cancelled if no items are left
         if ($newTotalPrice === 0 && $order->orderItems()->count() === 0) {
             $order->status = 'cancelled';
         }

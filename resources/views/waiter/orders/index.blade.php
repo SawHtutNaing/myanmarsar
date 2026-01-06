@@ -9,6 +9,30 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <!-- Date Filter Section -->
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold mb-3">Filter Orders by Date</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                                <input type="date" id="date_from" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                                <input type="date" id="date_to" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <button id="apply_filter" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    Apply Filter
+                                </button>
+                                <button id="reset_filter" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">* By default, showing today's orders only</p>
+                    </div>
+
                     <h3 class="text-lg font-bold mb-4">My Placed Orders</h3>
                     <div id="my-orders-list" class="space-y-8">
                         {{-- Orders will be loaded here via polling --}}
@@ -23,8 +47,16 @@
             let completedOrders = new Set();
             let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let audioEnabled = false;
+            let dateFrom = '';
+            let dateTo = '';
 
-            // Function to resume audio context after user interaction
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date_from').value = today;
+            document.getElementById('date_to').value = today;
+            dateFrom = today;
+            dateTo = today;
+
             function initAudioContext() {
                 if (audioCtx.state === 'suspended') {
                     audioCtx.resume().then(() => {
@@ -38,7 +70,6 @@
                 }
             }
 
-            // Add event listeners for user interaction (e.g., click anywhere on the page)
             document.body.addEventListener('click', initAudioContext);
 
             function playSound() {
@@ -59,6 +90,23 @@
                     oscillator.stop();
                 }, 200);
             }
+
+            // Apply Filter Button
+            document.getElementById('apply_filter').addEventListener('click', function() {
+                dateFrom = document.getElementById('date_from').value;
+                dateTo = document.getElementById('date_to').value;
+                fetchMyOrders();
+            });
+
+            // Reset Filter Button
+            document.getElementById('reset_filter').addEventListener('click', function() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('date_from').value = today;
+                document.getElementById('date_to').value = today;
+                dateFrom = today;
+                dateTo = today;
+                fetchMyOrders();
+            });
 
             function createSection(title, orders, bgClass) {
                 if (orders.length === 0) return null;
@@ -131,9 +179,12 @@
                     });
                     itemsHtml += '</ul>';
 
-                    // Parse total_price as float if it's a string
                     const totalPrice = parseFloat(order.total_price);
                     const formattedTotal = isNaN(totalPrice) ? '0.00' : totalPrice.toFixed(2);
+
+                    // Format date
+                    const orderDate = new Date(order.created_at);
+                    const formattedDate = orderDate.toLocaleString();
 
                     let editButtonHtml = '';
                     if (order.status !== 'completed' && order.status !== 'cancelled') {
@@ -142,6 +193,7 @@
 
                     orderCard.innerHTML = `
                         <h4 class="font-bold text-lg mb-2">Order #${order.id}</h4>
+                        <p class="text-xs text-gray-500 mb-2">${formattedDate}</p>
                         <p class="text-md font-semibold mb-1">Table #${order.table_number}</p>
                         <p class="text-sm mb-4">Status: <span class="${statusColor} font-semibold">${order.status}</span></p>
                         ${itemsHtml}
@@ -155,11 +207,21 @@
             }
 
             function fetchMyOrders() {
-                fetch('{{ route('waiter.my-orders.fetch') }}')
+                let url = '{{ route('waiter.my-orders.fetch') }}';
+                const params = new URLSearchParams();
+
+                if (dateFrom) params.append('date_from', dateFrom);
+                if (dateTo) params.append('date_to', dateTo);
+
+                if (params.toString()) {
+                    url += '?' + params.toString();
+                }
+
+                fetch(url)
                     .then(response => response.json())
                     .then(orders => {
                         const ordersList = document.getElementById('my-orders-list');
-                        ordersList.innerHTML = ''; // Clear the list
+                        ordersList.innerHTML = '';
 
                         orders.forEach(order => {
                             if (order.status === 'completed' && !completedOrders.has(order.id)) {
@@ -168,12 +230,10 @@
                             }
                         });
 
-                        // Sort orders by id descending (assuming higher id is newer)
                         orders.sort((a, b) => b.id - a.id);
 
-                        // Group orders
-                        let ready = []; // Have cooked items, not completed/cancelled
-                        let preparing = []; // In progress or pending, no cooked items
+                        let ready = [];
+                        let preparing = [];
                         let completed = [];
                         let cancelled = [];
 
@@ -192,7 +252,6 @@
                             }
                         });
 
-                        // Create sections in order: cooked/ready first, then pending/preparing, then completed, then cancelled
                         const readySection = createSection('Ready to Serve', ready, 'bg-green-50');
                         if (readySection) ordersList.appendChild(readySection);
 
@@ -204,11 +263,18 @@
 
                         const cancelledSection = createSection('Cancelled', cancelled, 'bg-red-50');
                         if (cancelledSection) ordersList.appendChild(cancelledSection);
+
+                        if (orders.length === 0) {
+                            ordersList.innerHTML = '<p class="text-gray-500 text-center py-8">No orders found for the selected date range.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching orders:', error);
                     });
             }
 
-            setInterval(fetchMyOrders, 5000); // Poll every 5 seconds
-            fetchMyOrders(); // Initial fetch
+            setInterval(fetchMyOrders, 5000);
+            fetchMyOrders();
         });
     </script>
 
