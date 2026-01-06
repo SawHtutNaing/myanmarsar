@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold mb-4">Edit Expense Detail</h3>
 
-                    <form method="POST" action="{{ route('admin.expense_details.update', $expenseDetail->id) }}">
+                    <form method="POST" action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.update', $expenseDetail->id) : route('admin.expense_details.update', $expenseDetail->id) }}">
                         @csrf
                         @method('PATCH')
 

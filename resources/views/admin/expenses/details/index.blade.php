@@ -22,11 +22,11 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Manage Expense Details</h3>
-                        <a href="{{ route('admin.expense_details.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.create') : route('admin.expense_details.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Add New Expense
                         </a>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -55,13 +55,13 @@
                                 @foreach ($expenseDetails as $expense)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $expense->id }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $expense->expenseGroup->name ?? 'N/A' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $expense->expenseGroup->name ?? 'N/A' }} ({{ $expense->expenseGroup->type }}) </td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $expense->title }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $expense->date->format('Y-m-d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">${{ number_format($expense->amount, 2) }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('admin.expense_details.edit', $expense->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                            <form action="{{ route('admin.expense_details.destroy', $expense->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this expense detail?');">
+                                            <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.edit', $expense->id) : route('admin.expense_details.edit', $expense->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                            <form action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.destroy', $expense->id) : route('admin.expense_details.destroy', $expense->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this expense detail?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>

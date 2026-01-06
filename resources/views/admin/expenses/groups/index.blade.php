@@ -22,7 +22,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Manage Expense Groups</h3>
-                        <a href="{{ route('admin.expense_groups.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_groups.create') : route('admin.expense_groups.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Add New Group
                         </a>
                     </div>
@@ -38,6 +38,9 @@
                                         Name
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Type
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Created At
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -50,10 +53,11 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $group->id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $group->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $group->type }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $group->created_at->format('Y-m-d H:i') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('admin.expense_groups.edit', $group->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                            <form action="{{ route('admin.expense_groups.destroy', $group->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this expense group? All associated expense details will also be deleted.');">
+                                            <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_groups.edit', $group->id) : route('admin.expense_groups.edit', $group->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                            <form action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_groups.destroy', $group->id) : route('admin.expense_groups.destroy', $group->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this expense group? All associated expense details will also be deleted.');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>

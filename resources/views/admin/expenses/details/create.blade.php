@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold mb-4">Add New Expense Detail</h3>
 
-                    <form method="POST" action="{{ route('admin.expense_details.store') }}">
+                    <form method="POST" action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.store') : route('admin.expense_details.store') }}">
                         @csrf
 
                         <!-- Expense Group -->

@@ -14,7 +14,13 @@ class ExpenseDetailController extends Controller
      */
     public function index()
     {
-        $expenseDetails = ExpenseDetail::with('expenseGroup')->latest()->paginate(10);
+        if (auth()->user()->hasRole('admin')) {
+            $expenseDetails = ExpenseDetail::with('expenseGroup')->latest()->paginate(10);
+        } else {
+            $expenseDetails = ExpenseDetail::whereHas('expenseGroup', function ($query) {
+                $query->where('type', 'kitchen');
+            })->with('expenseGroup')->latest()->paginate(10);
+        }
         return view('admin.expenses.details.index', compact('expenseDetails'));
     }
 
@@ -23,7 +29,11 @@ class ExpenseDetailController extends Controller
      */
     public function create()
     {
-        $expenseGroups = ExpenseGroup::all();
+        if (auth()->user()->hasRole('admin')) {
+            $expenseGroups = ExpenseGroup::all();
+        } else {
+            $expenseGroups = ExpenseGroup::where('type', 'kitchen')->get();
+        }
         return view('admin.expenses.details.create', compact('expenseGroups'));
     }
 
@@ -39,9 +49,18 @@ class ExpenseDetailController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
+        if (!auth()->user()->hasRole('admin')) {
+            $expenseGroup = ExpenseGroup::find($request->expense_group_id);
+            if ($expenseGroup->type !== 'kitchen') {
+                return redirect()->back()->withErrors(['expense_group_id' => 'You are not authorized to create an expense detail for this group.'])->withInput();
+            }
+        }
+
         ExpenseDetail::create($request->all());
 
-        return redirect()->route('admin.expense_details.index')
+        $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+
+        return redirect()->route($redirectRoute)
                          ->with('success', 'Expense detail created successfully.');
     }
 
@@ -59,7 +78,17 @@ class ExpenseDetailController extends Controller
      */
     public function edit(ExpenseDetail $expenseDetail)
     {
-        $expenseGroups = ExpenseGroup::all();
+        if (!auth()->user()->hasRole('admin') && $expenseDetail->expenseGroup->type !== 'kitchen') {
+            $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+            return redirect()->route($redirectRoute)->with('error', 'You are not authorized to edit this expense detail.');
+        }
+
+        if (auth()->user()->hasRole('admin')) {
+            $expenseGroups = ExpenseGroup::all();
+        } else {
+            $expenseGroups = ExpenseGroup::where('type', 'kitchen')->get();
+        }
+
         return view('admin.expenses.details.edit', compact('expenseDetail', 'expenseGroups'));
     }
 
@@ -75,9 +104,19 @@ class ExpenseDetailController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
+        if (!auth()->user()->hasRole('admin')) {
+            $expenseGroup = ExpenseGroup::find($request->expense_group_id);
+            if ($expenseGroup->type !== 'kitchen' || $expenseDetail->expenseGroup->type !== 'kitchen') {
+                $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+                return redirect()->route($redirectRoute)->with('error', 'You are not authorized to update this expense detail.');
+            }
+        }
+
         $expenseDetail->update($request->all());
 
-        return redirect()->route('admin.expense_details.index')
+        $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+
+        return redirect()->route($redirectRoute)
                          ->with('success', 'Expense detail updated successfully.');
     }
 
@@ -86,9 +125,16 @@ class ExpenseDetailController extends Controller
      */
     public function destroy(ExpenseDetail $expenseDetail)
     {
-        $expenseDetail->delete();
+        if (!auth()->user()->hasRole('admin') && $expenseDetail->expenseGroup->type !== 'kitchen') {
+            $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+            return redirect()->route($redirectRoute)->with('error', 'You are not authorized to delete this expense detail.');
+        }
 
-        return redirect()->route('admin.expense_details.index')
+        $expenseDetail->delete();
+        
+        $redirectRoute = auth()->user()->hasRole('supplier') ? 'supplier.expense_details.index' : 'admin.expense_details.index';
+
+        return redirect()->route($redirectRoute)
                          ->with('success', 'Expense detail deleted successfully.');
     }
 }

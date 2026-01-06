@@ -44,6 +44,8 @@ Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier
 Route::get('/', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
     Route::post('/ingredients/import', [IngredientImportController::class, 'store'])->name('ingredients.import.store');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+    Route::resource('expense_groups', ExpenseGroupController::class);
+    Route::resource('expense_details', ExpenseDetailController::class);
 });
 
 
