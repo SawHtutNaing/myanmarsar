@@ -14,10 +14,20 @@ class TableController extends Controller
     public function index()
     {
         $tables = Table::with(['orders' => function($query) {
-            $query->whereIn('status', ['pending', 'preparing'])
+            $query->whereIn('status', ['pending', 'preparing', 'cooked'])
                   ->with('orderItems.foodItem')
                   ->orderBy('created_at', 'desc');
         }])->get();
+
+        foreach ($tables as $table) {
+            foreach ($table->orders as $order) {
+                $isReady = $order->orderItems->every(function ($item) {
+                    return $item->status === 'cooked';
+                });
+                $order->is_ready = $isReady;
+            }
+        }
+
         return view('waiter.tables.index', compact('tables'));
     }
 

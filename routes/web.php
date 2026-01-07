@@ -38,6 +38,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('orders.index');
 
     Route::patch('/order-items/{orderItem}/cancel', [AdminController::class, 'cancelOrderItem'])->name('order_items.cancel');
+    Route::patch('/orders/{order}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
 });
 
 Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::patch('/orders/{order}/update-items', [WaiterController::class, 'updateOrderItems'])->name('orders.updateItems');
     Route::get('/fetch-statuses', [TableController::class, 'fetchTableStatuses'])->name('tables.fetch-statuses');
     Route::post('/orders/items/{id}/take', [WaiterController::class, 'takeOrderItem'])->name('orders.items.take');
+    Route::post('/orders/{order}/take-all', [WaiterController::class, 'takeAll'])->name('orders.take-all');
 });
 
 // Kitchen Routes

@@ -76,4 +76,38 @@ class AdminController extends Controller
             return redirect()->route('admin.orders.index')->with('error', 'Error cancelling order item: ' . $e->getMessage());
         }
     }
+    public function cancelOrder(Order $order)
+    {
+        if ($order->status === 'cancelled' || $order->status === 'completed') {
+            return redirect()->route('admin.orders.index')->with('error', 'Order is already ' . $order->status . '.');
+        }
+
+        try {
+            foreach ($order->orderItems as $orderItem) {
+                if ($orderItem->status !== 'cancelled' && $orderItem->status !== 'completed') {
+                    $orderItem->status = 'cancelled';
+                    $orderItem->save();
+
+                    $foodItem = $orderItem->foodItem;
+                    if ($foodItem) {
+                        foreach ($foodItem->ingredients as $ingredient) {
+                            $pivotQuantity = $ingredient->pivot->quantity;
+                            $orderItemQuantity = $orderItem->quantity;
+                            $restockQuantity = $pivotQuantity * $orderItemQuantity;
+                            $ingredient->quantity += $restockQuantity;
+                            $ingredient->save();
+                        }
+                    }
+                }
+            }
+
+            $order->status = 'cancelled';
+            $order->total_price = 0;
+            $order->save();
+
+            return redirect()->route('admin.orders.index')->with('success', 'Order cancelled and all ingredients restocked successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.orders.index')->with('error', 'Error cancelling order: ' . $e->getMessage());
+        }
+    }
 }

@@ -42,8 +42,19 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($orders as $order)
                                     <tr class="bg-gray-100">
-                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-lg font-semibold">
-                                            Order #{{ $order->id }} (Table: {{ $order->table->table_number ?? 'N/A' }}, Customer: {{ $order->user->name ?? 'Guest' }})
+                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-lg font-semibold flex justify-between items-center">
+                                            <span>
+                                                Order #{{ $order->id }} (Table: {{ $order->table->table_number ?? 'N/A' }}, Customer: {{ $order->user->name ?? 'Guest' }})
+                                            </span>
+                                            @if ($order->status !== 'cancelled' && $order->status !== 'completed')
+                                                <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this entire invoice? This will restock all ingredients for this order.');">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <x-danger-button>
+                                                        Cancel Invoice
+                                                    </x-danger-button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                     @foreach ($order->orderItems as $orderItem)

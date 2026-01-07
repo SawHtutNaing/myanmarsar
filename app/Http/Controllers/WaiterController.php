@@ -365,4 +365,17 @@ class WaiterController extends Controller
 
         return redirect()->route('waiter.my-orders')->with('success', 'Item taken.');
     }
+
+    public function takeAll(Order $order)
+    {
+        foreach ($order->orderItems as $orderItem) {
+            $orderItem->status = 'served';
+            $orderItem->save();
+        }
+
+        $order->status = 'served';
+        $order->save();
+
+        return redirect()->route('waiter.tables.index')->with('success', 'All items for Order #' . $order->id . ' have been taken.');
+    }
 }

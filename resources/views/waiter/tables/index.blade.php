@@ -136,6 +136,14 @@
                                                         <li>{{ $item->quantity }}x {{ $item->foodItem->name }}</li>
                                                     @endforeach
                                                 </ul>
+                                                @if ($latestOrder->is_ready)
+                                                    <form action="{{ route('waiter.orders.take-all', $latestOrder->id) }}" method="POST" class="mt-2">
+                                                        @csrf
+                                                        <button type="submit" class="w-full px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200">
+                                                            Take All
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         @endif
                                     @endif
