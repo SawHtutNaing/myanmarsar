@@ -351,15 +351,33 @@
                                     </a>
                                 `;
                                 if (table.latest_order) {
-                                    // Order items are not fetched by fetchTableStatuses, so we just show order ID and status
+                                    let orderItemsHtml = '';
+                                    if (table.latest_order.order_items) {
+                                        table.latest_order.order_items.forEach(item => {
+                                            orderItemsHtml += `<li>${item.quantity}x ${item.food_item.name}</li>`;
+                                        });
+                                    }
+
                                     actionsHtml += `
-                                        <div id="latest-order-summary-${table.id}" class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 text-blue-800 text-xs rounded-r" style="display: block;">
-                                            <p class="font-bold">Latest Order # ${table.latest_order.id} (${ucfirst(table.latest_order.status)})</p>
+                                        <div id="latest-order-summary-${table.id}" class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 text-blue-800 text-xs rounded-r">
+                                            <p class="font-bold">Latest Order #${table.latest_order.id} (${ucfirst(table.latest_order.status)})</p>
                                             <ul class="list-disc list-inside mt-1">
-                                                <!-- Order items not available from fetchTableStatuses -->
+                                                ${orderItemsHtml}
                                             </ul>
-                                        </div>
                                     `;
+
+                                    if (table.latest_order.is_ready) {
+                                        actionsHtml += `
+                                            <form action="/waiter/orders/${table.latest_order.id}/take-all" method="POST" class="mt-2">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="w-full px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200">
+                                                    Take All
+                                                </button>
+                                            </form>
+                                        `;
+                                    }
+
+                                    actionsHtml += `</div>`;
                                 } else {
                                      actionsHtml += `<div id="latest-order-summary-${table.id}" style="display: none;"></div>`;
                                 }

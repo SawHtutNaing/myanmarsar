@@ -106,15 +106,18 @@ class TableController extends Controller
                     $latestOrder = null;
 
                     if ($table->status === 'occupied') {
-
-                        $latestOrder = Order::where('table_number', $table->table_number)
-
-                                            ->whereIn('status', ['pending', 'preparing', 'served']) // Include served to track completion
-
+                        $latestOrder = Order::with('orderItems.foodItem') // Eager load orderItems
+                                            ->where('table_number', $table->table_number)
+                                            ->whereIn('status', ['pending', 'preparing', 'cooked', 'served']) // a user suggested to add cooked also
                                             ->orderBy('created_at', 'desc')
+                                            ->first(); // Get the full order model
 
-                                            ->first(['id', 'status']);
-
+                        if ($latestOrder) {
+                            $isReady = $latestOrder->orderItems->every(function ($item) {
+                                return $item->status === 'cooked';
+                            });
+                            $latestOrder->is_ready = $isReady;
+                        }
                     }
 
 
