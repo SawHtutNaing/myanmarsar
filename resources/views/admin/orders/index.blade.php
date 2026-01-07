@@ -44,7 +44,10 @@
                                     <tr class="bg-gray-100">
                                         <td colspan="4" class="px-6 py-4 whitespace-nowrap text-lg font-semibold flex justify-between items-center">
                                             <span>
-                                                Order #{{ $order->id }} (Table: {{ $order->table->table_number ?? 'N/A' }}, Customer: {{ $order->user->name ?? 'Guest' }})
+                                                Order #{{ $order->id }} (Table: {{ $order->table->table_number ?? 'N/A' }}, Waiter: {{ $order->user->name ?? 'Guest' }})
+                                                @if ($order->remark)
+                                                    <p class="text-sm text-gray-500">Remark: {{ $order->remark }}</p>
+                                                @endif
                                             </span>
                                             @if ($order->status !== 'cancelled' && $order->status !== 'completed')
                                                 <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this entire invoice? This will restock all ingredients for this order.');">

@@ -30,6 +30,11 @@
                     <p class="mb-2"><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
                     <p class="mb-4"><strong>Current Total:</strong> <span id="current_total_price">${{ number_format($order->total_price, 2) }}</span></p>
 
+                    <div class="mb-4">
+                        <label for="remark" class="block text-gray-700 text-sm font-bold mb-2">Remark:</label>
+                        <textarea name="remark" id="remark" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('remark', $order->remark) }}</textarea>
+                    </div>
+
                     <form action="{{ route('waiter.orders.updateItems', $order->id) }}" method="POST">
                         @csrf
                         @method('PATCH')

@@ -118,6 +118,8 @@
                                     </span>
                                 </div>
                                 <p class="text-gray-600 mb-2">Table: ${order.table_number}</p>
+                                ${order.remark ? `<p class="text-gray-700 mb-2">Remark: ${order.remark}</p>` : ''}
+                                ${order.user ? `<p class="text-gray-700 mb-2">Waiter: ${order.user.name}</p>` : ''}
                                 ${itemsHtml}
                                 <p class="text-right font-bold mt-3">Total: $${formattedTotal}</p>
                                 <form action="{{ route('kitchen.orders.complete-order', ['orderId' => 'ORDER_ID']) }}" method="POST" class="mt-4" data-order-id="${order.id}">

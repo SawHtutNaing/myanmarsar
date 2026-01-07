@@ -37,6 +37,7 @@ class WaiterController extends Controller
         $request->validate([
             'table_number' => 'required|integer|exists:tables,table_number',
             'items' => 'required|array',
+            'remark' => 'nullable|string',
         ]);
 
         $table = Table::where('table_number', $request->table_number)->firstOrFail();
@@ -85,6 +86,7 @@ class WaiterController extends Controller
             'table_number' => $request->table_number,
             'status' => 'pending',
             'total_price' => $totalPrice,
+            'remark' => $request->remark,
         ]);
 
         foreach ($itemData as $data) {
@@ -268,6 +270,7 @@ class WaiterController extends Controller
         $request->validate([
             'items' => 'required|array',
             'items.*' => 'numeric|min:0',
+            'remark' => 'nullable|string',
         ]);
 
         if ($order->status === 'completed' || $order->status === 'cancelled') {
@@ -342,6 +345,7 @@ class WaiterController extends Controller
         if ($newTotalPrice === 0 && $order->orderItems()->count() === 0) {
             $order->status = 'cancelled';
         }
+        $order->remark = $request->remark;
         $order->save();
 
         return redirect()->route('waiter.orders.edit', $order->id)->with('success', 'Order items updated successfully.');

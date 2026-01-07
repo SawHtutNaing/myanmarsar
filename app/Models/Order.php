@@ -16,7 +16,10 @@ class Order extends Model
         'status',
         'total_price',
         'table_number',
+        'remark',
+
     ];
+
 
     /**
      * The user (waiter) that placed the order.
