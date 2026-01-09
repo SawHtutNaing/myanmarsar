@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
 
 use App\Models\Order;
 use App\Models\FoodItem;
 use App\Models\Ingredient;
 use App\Models\OrderItem; // Added this line
 
+
+ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -110,4 +116,58 @@ class AdminController extends Controller
             return redirect()->route('admin.orders.index')->with('error', 'Error cancelling order: ' . $e->getMessage());
         }
     }
+
+
+public function downloadDatabase()
+{
+    try {
+        $fileName = 'backup-' . now()->format('Y-m-d_H-i-s') . '.sql';
+        $filePath = 'backup/' . $fileName;
+
+        Storage::makeDirectory('backup');
+
+        $database = config('database.connections.mysql.database');
+        $tables = DB::select('SHOW TABLES');
+        $sql = '';
+
+        foreach ($tables as $table) {
+            $tableName = array_values((array)$table)[0];
+
+            // Get table structure
+            $createTable = DB::select("SHOW CREATE TABLE `{$tableName}`")[0];
+            $sql .= "\n\n-- Table structure for `{$tableName}`\n\n";
+            $sql .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+            $sql .= $createTable->{'Create Table'} . ";\n\n";
+
+            // Get table data
+            $rows = DB::table($tableName)->get();
+
+            if ($rows->count() > 0) {
+                $sql .= "-- Dumping data for table `{$tableName}`\n\n";
+
+                foreach ($rows as $row) {
+                    $row = (array)$row;
+                    $values = array_map(function($value) {
+                        return is_null($value) ? 'NULL' : "'" . addslashes($value) . "'";
+                    }, $row);
+
+                    $sql .= "INSERT INTO `{$tableName}` VALUES (" . implode(', ', $values) . ");\n";
+                }
+            }
+        }
+
+        Storage::put($filePath, $sql);
+
+        return response()->download(Storage::path($filePath), $fileName, [
+            'Content-Type' => 'application/sql',
+        ])->deleteFileAfterSend(true);
+
+    } catch (\Exception $exception) {
+        if (isset($filePath) && Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
+
+        return redirect()->back()->with('error', 'Database backup failed: ' . $exception->getMessage());
+    }
+}
 }

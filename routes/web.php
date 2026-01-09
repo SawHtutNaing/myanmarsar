@@ -39,6 +39,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::patch('/order-items/{orderItem}/cancel', [AdminController::class, 'cancelOrderItem'])->name('order_items.cancel');
     Route::patch('/orders/{order}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::get('/download-database', [AdminController::class, 'downloadDatabase'])->name('download.database');
 });
 
 Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
