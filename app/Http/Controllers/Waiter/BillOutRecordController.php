@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Waiter;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\TableBillOutRecord; // Add this
+use App\Models\TableBillOutRecord;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class TableBillOutRecordController extends Controller
+class BillOutRecordController extends Controller
 {
     public function index(Request $request)
     {
-        $query = TableBillOutRecord::with(['user', 'table', 'order']);
+        $waiterId = Auth::id();
+
+        $query = TableBillOutRecord::where('user_id', $waiterId)
+                                     ->with(['user', 'table', 'order']);
 
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
@@ -41,6 +45,6 @@ class TableBillOutRecordController extends Controller
 
         $billOutRecords = $query->latest()->paginate(10);
 
-        return view('admin.reports.table_bill_outs.index', compact('billOutRecords', 'totalAmount', 'dateFrom', 'dateTo'));
+        return view('waiter.reports.bill_outs.index', compact('billOutRecords', 'totalAmount', 'dateFrom', 'dateTo'));
     }
 }

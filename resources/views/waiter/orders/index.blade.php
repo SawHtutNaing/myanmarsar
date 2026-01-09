@@ -6,11 +6,11 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <!-- Date Filter Section -->
-                    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg hidden">
                         <h4 class="text-md font-semibold mb-3">Filter Orders by Date</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>

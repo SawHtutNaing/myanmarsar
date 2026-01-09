@@ -23,7 +23,15 @@ class KitchenController extends Controller
         $orders = Order::whereHas('orderItems', function ($query) {
             $query->whereIn('status', ['pending', 'cooked']);
 
-        })->with('orderItems.foodItem')->get();
+        })->with('orderItems.foodItem')->get()
+        ->map(function ($order) {
+    $order->updated_human = $order->updated_at
+        ? $order->updated_at->diffForHumans()
+        : null;
+    return $order;
+});
+
+        ;
         return response()->json($orders);
     }
 

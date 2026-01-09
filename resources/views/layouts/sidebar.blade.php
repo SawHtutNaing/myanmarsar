@@ -242,6 +242,23 @@
                 </svg>
                 <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">My Orders</span>
             </x-nav-link>
+
+            <x-nav-link :href="route('waiter.order-history')" :active="request()->routeIs('waiter.order-history')" class="flex items-center px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Order History</span>
+            </x-nav-link>
+
+            <x-nav-link :href="route('waiter.reports.bill_outs.index')" :active="request()->routeIs('waiter.reports.bill_outs.index')" class="flex items-center px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+                    <polyline points="14 2 14 7 19 7"></polyline>
+                    <line x1="8" y1="13" x2="16" y2="13"></line>
+                    <line x1="8" y1="17" x2="14" y2="17"></line>
+                </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Bill Out Records</span>
+            </x-nav-link>
         @endif
 
         {{-- KITCHEN --}}

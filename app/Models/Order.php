@@ -43,4 +43,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function TableBillOutRecords(): HasMany
+    {
+        return $this->hasMany(TableBillOutRecord::class);
+    }
 }

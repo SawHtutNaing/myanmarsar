@@ -43,8 +43,10 @@ class TableController extends Controller
         $table = Table::findOrFail($id);
         $orders = Order::where('table_number', $table->table_number)
             ->with('orderItems.foodItem')
+            ->whereIn('status', ['pending', 'preparing', 'cooked', 'served'])
             ->orderBy('created_at', 'desc') // Order by created_at descending
             ->get();
+        Log::info('Fetched Orders for Table ' . $table->table_number . ': ', $orders->toArray());
         return response()->json([
             'orders' => $orders,
             'table_status' => $table->status,
@@ -72,11 +74,11 @@ class TableController extends Controller
                                              ->whereIn('status', ['pending', 'preparing', 'served']) // Only consider active orders
                                              ->latest()
                                              ->first();
-        
+
                         if ($currentOrder) {
                             $currentOrder->status = 'completed';
                             $currentOrder->save();
-        
+
                             // Create a TableBillOutRecord
                             TableBillOutRecord::create([
                                 'user_id' => Auth::id(),

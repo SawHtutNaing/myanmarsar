@@ -118,7 +118,9 @@
                                     </span>
                                 </div>
                                 <p class="text-gray-600 mb-2">Table: ${order.table_number}</p>
+
                                 ${order.remark ? `<p class="text-gray-700 mb-2">Remark: ${order.remark}</p>` : ''}
+                                ${order.updated_human ? `<p class="text-gray-700 mb-2">Order At ${order.updated_human}</p>` : ''}
                                 ${order.user ? `<p class="text-gray-700 mb-2">Waiter: ${order.user.name}</p>` : ''}
                                 ${itemsHtml}
                                 <p class="text-right font-bold mt-3">Total: $${formattedTotal}</p>

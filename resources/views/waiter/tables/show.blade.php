@@ -21,15 +21,47 @@
                         {{-- Active orders will be loaded here via polling --}}
                     </div>
 
-                    <h3 class="text-lg font-bold mb-4">Past Orders</h3>
+                    <h3 class="text-lg font-bold mb-4">Served Orders</h3>
                     <div id="past-orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {{-- Past orders will be loaded here via polling --}}
                     </div>
-                    <div class="mt-4">
-                        <button id="toggle-status-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Toggle Status
-                        </button>
-                    </div>
+
+
+               <div class="flex flex-col items-start gap-2 p-4 border-t">
+    <button
+        type="button"
+        id="toggle-status-btn"
+        class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white
+               hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+               disabled:cursor-not-allowed disabled:bg-gray-400"
+        data-table-id="{{ $table->id }}"
+        data-current-status="{{ $table->status }}"
+        @disabled(
+            $table->orders()->where('status', 'pending')->exists() ||
+            $table->orders()->whereHas('orderItems', function ($q) {
+                $q->where('status', 'pending');
+            })->exists()
+        )
+    >
+        <i class="fas fa-sync-alt"></i>
+        Toggle Status
+    </button>
+
+    @if(
+        $table->orders()->where('status', 'pending')->exists() ||
+        $table->orders()->whereHas('orderItems', function ($q) {
+            $q->where('status', 'pending');
+        })->exists()
+    )
+        <small class="flex items-center gap-1 text-sm text-gray-500">
+            <i class="fas fa-info-circle"></i>
+            Cannot change status – pending orders exist
+        </small>
+    @endif
+</div>
+
+
+
                 </div>
             </div>
         </div>
@@ -79,6 +111,7 @@
             }
 
             function fetchTableOrders() {
+
                 fetch('{{ route('waiter.tables.fetchOrders', $table->id) }}')
                     .then(response => response.json())
                     .then(data => {
@@ -158,7 +191,7 @@
                     });
             }
 
-            document.getElementById('toggle-status-btn').addEventListener('click', function () {
+            document.getElementById('toggle-status-btn')?.addEventListener('click', function () {
                 fetch('{{ route('waiter.tables.toggleStatus', $table->id) }}', {
                     method: 'POST',
                     headers: {

@@ -36,3 +36,23 @@ waiter order eidt
 
 
 order 
+
+
+
+
+
+remark မပေါ်သေးပါ 
+
+time zone ပြန်ပေးပါ
+
+table orders ကို ပြန်ရှင်းပေးပါ ထည့်ပေးပါ
+
+
+total ရောင်းရငွေကို ပြန်တွက်ပေးပါ
+
+
+waiter စာရင်းပိတ်ကိုပြန်စစ်ပေးပါ 
+
+kitchen က မပြီးသေးရင် toggle status လုပ်လို့မရအောင်လုပ်ပေးပါ 
+
+

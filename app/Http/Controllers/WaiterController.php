@@ -236,7 +236,10 @@ class WaiterController extends Controller
 
     public function fetchMyOrders(Request $request)
     {
-        $query = Auth::user()->orders()->with('orderItems.foodItem');
+        $query = Auth::user()
+    ->orders()
+    ->whereNotIn('status', ['completed', 'canceled'])
+    ->with('orderItems.foodItem');
 
         // Apply date filters
         if ($request->has('date_from') && $request->date_from) {
@@ -381,5 +384,31 @@ class WaiterController extends Controller
         $order->save();
 
         return redirect()->route('waiter.tables.index')->with('success', 'All items for Order #' . $order->id . ' have been taken.');
+    }
+
+    public function orderHistory()
+    {
+        return view('waiter.orders.history');
+    }
+
+    public function fetchOrderHistory(Request $request)
+    {
+        $query = Auth::user()->orders()
+            ->where('status', 'completed')
+            ->with('orderItems.foodItem');
+
+        // Apply date filters
+        if ($request->has('date_from') && $request->date_from) {
+            $dateFrom = Carbon::parse($request->date_from)->startOfDay();
+            $query->where('created_at', '>=', $dateFrom);
+        }
+
+        if ($request->has('date_to') && $request->date_to) {
+            $dateTo = Carbon::parse($request->date_to)->endOfDay();
+            $query->where('created_at', '<=', $dateTo);
+        }
+
+        $orders = $query->latest()->get();
+        return response()->json($orders);
     }
 }

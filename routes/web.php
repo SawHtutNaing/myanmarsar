@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
 });
 
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\Waiter\BillOutRecordController as WaiterBillOutRecordController;
 
 // Waiter Routes
 Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->group(function () {
@@ -69,6 +70,9 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::post('/orders', [WaiterController::class, 'storeOrder'])->name('orders.store');
     Route::get('/my-orders', [WaiterController::class, 'orders'])->name('my-orders');
     Route::get('/my-orders/fetch', [WaiterController::class, 'fetchMyOrders'])->name('my-orders.fetch');
+    Route::get('/order-history', [WaiterController::class, 'orderHistory'])->name('order-history');
+    Route::get('/order-history/fetch', [WaiterController::class, 'fetchOrderHistory'])->name('order-history.fetch');
+    Route::get('/bill-outs', [WaiterBillOutRecordController::class, 'index'])->name('reports.bill_outs.index');
     Route::post('/tables/{id}/toggle-status', [TableController::class, 'toggleStatus'])->name('tables.toggleStatus');
     Route::get('tables/{id}/fetch-orders', [TableController::class, 'fetchOrders'])->name('tables.fetchOrders');
     Route::get('/orders/add-to-current', [WaiterController::class, 'createAdditionalOrder'])->name('orders.add-to-current');
