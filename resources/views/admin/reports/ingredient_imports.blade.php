@@ -79,7 +79,8 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 ${{ number_format($import->quantity * $import->unit_price, 2) }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
+                                                <a href="{{ route('admin.ingredient-imports.edit', $import->id) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
                                                 <form action="{{ route('admin.reports.ingredient-imports.destroy', $import->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this import?');">
                                                     @csrf
                                                     @method('DELETE')

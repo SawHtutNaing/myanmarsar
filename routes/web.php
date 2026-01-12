@@ -16,6 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\Admin\IngredientImportController as AdminIngredientImportController;
 use App\Http\Controllers\ReportController;
 
 use App\Http\Controllers\IngredientImportController;
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('tables', AdminTableController::class);
     Route::resource('expense_groups', ExpenseGroupController::class); // Added
     Route::resource('expense_details', ExpenseDetailController::class); // Added
+    Route::resource('ingredient-imports', AdminIngredientImportController::class)->only(['edit', 'update']);
     Route::get('/reports/sales', [ReportController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/profit-loss', [ReportController::class, 'profitLossReport'])->name('reports.profit_loss');
     Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');

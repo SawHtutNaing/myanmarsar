@@ -1,0 +1,274 @@
+## 5.1. Database Design and SQL Schema
+
+The database for the "Myanmar Sar" application is designed as a normalized relational database, adhering to the conventions of the Laravel framework. It uses foreign key constraints to maintain data integrity and defines clear relationships between entities. The schema is managed through Laravel's migration system, allowing for version control and easy evolution of the database structure.
+
+### Key Table Descriptions
+
+*   **`users`**: Stores authentication information for all system users.
+*   **`roles`**: Defines the different roles a user can have (e.g., 'admin', 'waiter').
+*   **`role_user`**: A pivot table that manages the many-to-many relationship between `users` and `roles`, allowing a user to have multiple roles.
+*   **`tables`**: Represents the physical tables in the restaurant, storing their number and current status ('available', 'occupied').
+*   **`ingredients`**: Acts as the inventory master list, storing details about each raw ingredient, including its name, quantity on hand, and unit cost.
+*   **`food_items`**: The menu master list. Stores details for each dish, including its name, sale price, and description.
+*   **`food_item_ingredient`**: A pivot table that manages the many-to-many relationship between `food_items` and `ingredients`. This table defines the recipe for each food item, specifying the quantity of each ingredient required.
+*   **`orders`**: The transactional header table. Each record represents a single customer order, linking to the user (waiter) who took it and the table it's for. It stores the overall status and total price.
+*   **`order_items`**: The transactional detail table. Each record represents a line item within an order, linking to the specific `food_item`, its quantity, and its price at the time of the order.
+
+### SQL Schema
+
+Below is the SQL `CREATE TABLE` representation of the core tables, derived from the project's migration files.
+
+```sql
+-- Users Table
+CREATE TABLE users (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    email_verified_at TIMESTAMP NULL,
+    password VARCHAR(255) NOT NULL,
+    remember_token VARCHAR(100) NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+);
+
+-- Roles Table
+CREATE TABLE roles (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+);
+
+-- Role-User Pivot Table
+CREATE TABLE role_user (
+    role_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (role_id, user_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tables Table
+CREATE TABLE tables (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    table_number INT NOT NULL UNIQUE,
+    status VARCHAR(255) NOT NULL DEFAULT 'available',
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+);
+
+-- Ingredients Table
+CREATE TABLE ingredients (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    unit VARCHAR(255) NOT NULL,
+    quantity DECIMAL(8, 2) NOT NULL DEFAULT 0,
+    unit_price DECIMAL(8, 2) NOT NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+);
+
+-- Food Items Table
+CREATE TABLE food_items (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(8, 2) NOT NULL,
+    description TEXT NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+);
+
+-- Food Item-Ingredient Pivot Table (Recipe)
+CREATE TABLE food_item_ingredient (
+    food_item_id BIGINT UNSIGNED NOT NULL,
+    ingredient_id BIGINT UNSIGNED NOT NULL,
+    quantity DOUBLE PRECISION NOT NULL,
+    PRIMARY KEY (food_item_id, ingredient_id),
+    FOREIGN KEY (food_item_id) REFERENCES food_items(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
+);
+
+-- Orders Table
+CREATE TABLE orders (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    table_number INT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'pending',
+    total_price DECIMAL(8, 2) NOT NULL DEFAULT 0.00,
+    remark TEXT NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Order Items Table
+CREATE TABLE order_items (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT UNSIGNED NOT NULL,
+    food_item_id BIGINT UNSIGNED NOT NULL,
+    quantity DECIMAL(8, 2) NOT NULL,
+    price DECIMAL(8, 2) NOT NULL,
+    cost DECIMAL(8, 2) NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (food_item_id) REFERENCES food_items(id) ON DELETE CASCADE
+);
+```
+
+## 5.2. Class Diagram and Data Dictionary
+
+The class diagram features classes corresponding to the Eloquent models and database tables:
+
+**User Class (app/Models/User.php)**
+*   **Attributes**: `id` (int, PK), `name` (string), `email` (string), `password` (hashed string), `created_at` (timestamp).
+*   **Relationships**: Belongs to many `Role`s, Has many `Order`s.
+*   **Methods**: `hasRole(string $role)` to check user's role.
+
+**FoodItem Class (app/Models/FoodItem.php)**
+*   **Corresponds to**: `MenuItem`
+*   **Attributes**: `id` (int, PK), `name` (string), `description` (text), `price` (decimal).
+*   **Relationships**: Belongs to many `Ingredient`s.
+
+**Table Class (app/Models/Table.php)**
+*   **Corresponds to**: `RestaurantTable`
+*   **Attributes**: `id` (int, PK), `table_number` (int), `status` (string, e.g., 'available', 'occupied').
+*   **Relationships**: Has many `Order`s.
+
+**Order Class (app/Models/Order.php)**
+*   **Attributes**: `id` (int, PK), `user_id` (int, FK to User), `table_number` (int, FK to Table), `status` (string, e.g., 'pending', 'completed'), `total_price` (decimal), `created_at` (timestamp).
+*   **Relationships**: Has many `OrderItem`s, Belongs to a `User` and a `Table`.
+
+**OrderItem Class (app/Models/OrderItem.php)**
+*   **Attributes**: `id` (int, PK), `order_id` (int, FK to Order), `food_item_id` (int, FK to FoodItem), `quantity` (int), `price` (decimal), `cost` (decimal), `status` (string, e.g., 'pending', 'cooked').
+*   **Relationships**: Belongs to an `Order` and a `FoodItem`.
+
+**Ingredient Class (app/Models/Ingredient.php)**
+*   **Corresponds to**: `Inventory`
+*   **Attributes**: `id` (int, PK), `name` (string), `quantity` (int), `unit` (string), `unit_price` (decimal).
+*   **Relationships**: Belongs to many `FoodItem`s.
+
+## 5.3. Sequence Diagrams
+
+**Sequence Diagram for Create Order:**
+
+1.  **Waiter -> System:** Selects a table and submits new order details (items, quantities) to `WaiterController@storeOrder`.
+2.  **System -> Database:**
+    *   Verifies the `Table` status is 'available'.
+    *   Checks for sufficient `Ingredient` quantity for each `FoodItem`.
+    *   Creates a new `Order` record with status 'pending'.
+    *   Creates associated `OrderItem` records.
+    *   Updates (decrements) the `Ingredient` quantities.
+    *   Updates the `Table` status to 'occupied'.
+3.  **System -> Waiter:** Redirects with a success message.
+4.  **Kitchen Staff -> System:** The Kitchen Display System (`KitchenController`) fetches `Order`s with 'pending' status to display them for preparation.
+
+**Sequence Diagram for Generate Bill:**
+
+1.  **Waiter -> System:** Requests to change the status of an 'occupied' table via `TableController@toggleStatus`.
+2.  **System -> Database:**
+    *   Finds the `Table` and verifies its status.
+    *   Finds the active `Order` associated with the table.
+    *   Updates the `Order` status to 'completed'.
+    *   Creates a `TableBillOutRecord` to log the transaction.
+    *   Updates the `Table` status to 'available'.
+3.  **System -> Waiter:** Returns a confirmation with the new table status.
+
+## 5.4. Use Case Diagram
+
+The system involves four main actors: Waiter, Kitchen Staff, Admin, and Supplier. All actors must log in to the system to access their respective functionalities.
+
+**Actor: Waiter**
+*   **Use Cases:**
+    *   **Manage Tables:** Views the status of all tables (available, occupied) and selects a table to manage.
+    *   **Create Order:** Creates a new order for an available table, adding food items from the menu. This use case updates ingredient inventory.
+    *   **Manage Active Order:** Adds new items to an existing, occupied table's order.
+    *   **Serve Items:** Marks items as "served" once they are cooked and delivered to the table.
+    *   **Generate Bill:** Finalizes the order, which completes the order record, creates a bill out record, and makes the table available again.
+    *   **View Order History:** Looks up previously completed orders.
+
+**Actor: Kitchen Staff**
+*   **Use Cases:**
+    *   **View Pending Orders:** Views a real-time list of new and preparing orders on the Kitchen Display System (KDS).
+    *   **Update Order Item Status:** Marks individual food items as "cooked" once they are prepared.
+    *   **Update Order Status:** Marks an entire order as "complete" when all its items are ready.
+
+**Actor: Admin**
+*   **Use Cases:**
+    *   **Manage Users:** Performs CRUD (Create, Read, Update, Delete) operations on user accounts and assigns roles.
+    *   **Manage Food Items:** Performs CRUD operations on menu items.
+    *   **Manage Ingredients:** Performs CRUD operations on inventory ingredients.
+    *   **Manage Tables:** Performs CRUD operations on restaurant tables.
+    *   **View All Orders:** Can view and cancel any order in the system.
+    *   **Generate Reports:** Generates and views various reports, such as Sales, Profit & Loss, and Ingredient Imports.
+    *   **Manage Expenses:** Manages expense groups and details.
+
+**Actor: Supplier**
+*   **Use Cases:**
+    *   **Manage Ingredient Imports:** Creates new records for ingredient imports, updating the inventory.
+    *   **View Import History:** Views a history of past ingredient imports.
+
+## 5.5. Detailed Use Case Specifications
+
+This section provides a formal specification for the primary use cases within the system.
+
+---
+
+### Use Case: Create Order
+
+| | |
+|---|---|
+| **Use Case Name** | Create Order |
+| **ID** | UC-01 |
+| **Actor(s)** | Waiter |
+| **Description** | The Waiter creates a new food and beverage order for a customer at an available table. |
+| **Preconditions** | 1. The Waiter must be authenticated and have the 'waiter' role. <br> 2. The target `Table` must have a status of 'available'. |
+| **Postconditions** | 1. A new `Order` record is created with a status of 'pending'. <br> 2. One or more `OrderItem` records associated with the new order are created. <br> 3. The `quantity` of the corresponding `Ingredient`s is reduced. <br> 4. The `Table` status is updated to 'occupied'. <br> 5. The new order is visible on the Kitchen Display System (KDS). |
+| **Main Flow** | 1. The Waiter navigates to the Table overview screen. <br> 2. The Waiter selects an 'available' table. <br> 3. The system displays the order creation screen, pre-filled with the selected table number. <br> 4. The Waiter adds one or more food items to the order summary. <br> 5. The Waiter adds optional remarks for the kitchen. <br> 6. The Waiter confirms and submits the order. <br> 7. The system validates the order (see Alternative Flows). <br> 8. The system creates the `Order` and `OrderItem` records. <br> 9. The system updates the `Ingredient` and `Table` records. <br> 10. The system redirects the Waiter to the table overview screen and displays a success message. |
+| **Alternative Flows & Exceptions** | **5a. Insufficient Ingredients:** If, during step 7 of the Main Flow, the system determines that the quantity of a required ingredient is insufficient for a selected food item, the process is halted. The system returns the Waiter to the order creation screen with an error message specifying which ingredient is out of stock. The order is not created. <br> **5b. Table becomes Occupied:** If, between step 2 and 6, another Waiter selects the same table and completes an order, the `Table` status will change to 'occupied'. When the current Waiter submits the order, the system validation in step 7 fails. It returns an error message "Table is no longer available." and the order is not created. <br> **5c. No Items Selected:** If the Waiter submits the order with no items selected, the system returns an error message "At least one item is required." |
+
+---
+
+### Use Case: Generate Bill
+
+| | |
+|---|---|
+| **Use Case Name** | Generate Bill |
+| **ID** | UC-02 |
+| **Actor(s)** | Waiter |
+| **Description** | The Waiter finalizes a customer's bill, completes the order, and frees up the table. |
+| **Preconditions** | 1. The Waiter must be authenticated. <br> 2. The target `Table` must have a status of 'occupied' with an active order associated with it. |
+| **Postconditions** | 1. The active `Order`'s status is changed to 'completed'. <br> 2. A `TableBillOutRecord` is created, logging the transaction details. <br> 3. The `Table` status is updated to 'available'. |
+| **Main Flow** | 1. The Waiter navigates to the Table overview screen. <br> 2. The Waiter selects the 'occupied' table for which the bill is requested. <br> 3. The system may display a summary of the order for final confirmation (or this is handled externally by the Waiter). <br> 4. The Waiter triggers the "Generate Bill / Free Table" action. <br> 5. The system finds the active order for the table. <br> 6. The system updates the order status, creates the bill out record, and updates the table status. <br> 7. The system confirms the action was successful, and the table now shows as 'available' on the overview screen. |
+| **Alternative Flows & Exceptions** | **4a. Table has no active order:** If the "Generate Bill" action is triggered on a table that is 'occupied' but has no active order (e.g., status is already 'completed'), the system does nothing and may show a notification "Table has no active order to bill." |
+
+---
+
+### Use Case: Update Order Item Status
+
+| | |
+|---|---|
+| **Use Case Name** | Update Order Item Status |
+| **ID** | UC-03 |
+| **Actor(s)** | Kitchen Staff |
+| **Description** | The Kitchen Staff marks a specific food item on an order ticket as prepared. |
+| **Preconditions** | 1. The Kitchen Staff must be authenticated. <br> 2. An `Order` with a status of 'pending' or 'preparing' must exist. |
+| **Postconditions** | 1. The target `OrderItem`'s status is updated to 'cooked'. <br> 2. If all `OrderItem`s for the `Order` are now 'cooked', the parent `Order`'s status is also updated to 'cooked' or 'ready'. <br> 3. A notification may be sent to the Waiter's interface. |
+| **Main Flow** | 1. The Kitchen Staff views the KDS, which displays incoming order tickets. <br> 2. Upon completing the preparation of a food item, the staff member taps or clicks on that item on the relevant ticket. <br> 3. The system sends an asynchronous request to update the `OrderItem` status. <br> 4. The UI of the item on the ticket is updated (e.g., text is struck-through or grayed out). <br> 5. The system checks if all items on the order are complete and updates the parent order's status if necessary. |
+| **Alternative Flows & Exceptions** | None. This is a simple, discrete action. |
+
+---
+
+### Use Case: Manage Users
+
+| | |
+|---|---|
+| **Use Case Name** | Manage Users |
+| **ID** | UC-04 |
+| **Actor(s)** | Admin |
+| **Description** | The Admin performs CRUD (Create, Read, Update, Delete) operations on user accounts. |
+| **Preconditions** | 1. The Admin must be authenticated. |
+| **Postconditions** | A user account is created, updated, or deleted from the system. |
+| **Main Flow** | **Create:** <br> 1. Admin navigates to the User Management page and clicks "Add New User". <br> 2. Admin fills out the form (name, email, password, roles) and submits. <br> 3. System creates a new `User` record and assigns roles via the `role_user` pivot table. <br> 4. System shows a success message. <br> **Update:** <br> 1. Admin navigates to the User Management page. <br> 2. Admin clicks the "Edit" button for a specific user. <br> 3. Admin modifies the user's details and/or roles and submits the form. <br> 4. System updates the `User` record and syncs their roles. <br> 5. System shows a success message. <br> **Delete:** <br> 1. Admin navigates to the User Management page. <br> 2. Admin clicks the "Delete" button for a specific user. <br> 3. System displays a confirmation modal. <br> 4. Admin confirms the deletion. <br> 5. System deletes the `User` record. <br> 6. System shows a success message. |
+| **Alternative Flows & Exceptions** | **2a. Validation Fails (Create/Update):** If the submitted form data is invalid (e.g., email already exists, password is too short), the system redisplays the form with the user's input and corresponding error messages. The user is not created/updated. <br> **4a. Deleting Own Account:** The system may prevent an Admin from deleting their own account to avoid being locked out of the system. |

@@ -1,0 +1,143 @@
+## 5.2. Detailed Screen Descriptions
+
+This section provides a comprehensive walkthrough of the application's user interface for each role. The descriptions are based on the project's architecture, leveraging a consistent design system built with Tailwind CSS and Alpine.js, ensuring a modern and intuitive user experience.
+
+### 5.2.1. Common Screens & Components
+
+#### Login Screen
+The application's entry point for all users is a clean, centered login form set against a subtle, welcoming background, perhaps a blurred image of the restaurant's interior or a simple gradient.
+
+*   **Layout**: A single-column layout, vertically and horizontally centered on the page. The restaurant's logo (`public/logo.jpg`) is displayed prominently above the login card.
+*   **Login Card**: A floating card component (`bg-white`, `rounded-lg`, `shadow-md`, `p-8`) contains the form elements.
+*   **Form Fields**:
+    *   **Email Address**: A text input field (`<x-text-input>`) with a placeholder "email@example.com". It features a leading icon (e.g., an envelope) for better visual recognition. The input has `type="email"` for browser-level validation. An associated `<x-input-label>` floats above it.
+    *   **Password**: A password input field (`<x-text-input>`) with `type="password"`. It includes a trailing icon that, when clicked (using Alpine.js to toggle the input type), reveals the password text for user convenience.
+*   **"Remember Me" Checkbox**: A standard checkbox allowing users to stay logged in.
+*   **"Forgot Your Password?" Link**: A discreet link below the password field that navigates to the password reset flow.
+*   **Login Button**: A full-width primary button (`<x-primary-button>`) with bold text, e.g., "Sign In". The button has a loading state, managed by Alpine.js, which shows a spinner and disables the button when the form is submitted to prevent multiple clicks.
+*   **Error Handling**: Validation errors (`<x-input-error>`) appear in red text directly below the respective fields upon a failed login attempt (e.g., "These credentials do not match our records.").
+
+#### Main Application Layout (Authenticated Users)
+Once logged in, all users share a common layout structure, defined in `resources/views/layouts/app.blade.php`, which consists of a persistent sidebar for navigation and a main content area.
+
+*   **Sidebar (`layouts/sidebar.blade.php`)**:
+    *   A dark-themed, full-height vertical navigation bar (`bg-gray-800`, `text-gray-100`).
+    *   The restaurant logo and name are displayed at the top.
+    *   Navigation links (`<x-nav-link>`) are listed vertically. The active link is highlighted with a different background color and a brighter text color (e.g., `bg-gray-900`, `text-white`). Each link has an icon for quick identification.
+    *   The links displayed are conditional, based on the user's role (`@if(auth()->user()->hasRole('admin')) ... @endif`).
+    *   At the bottom of the sidebar is the user's name and a "Logout" link or dropdown.
+*   **Header Bar**:
+    *   A light-themed horizontal bar at the top of the main content area (`bg-white`, `border-b`, `border-gray-100`).
+    *   It contains a "hamburger" icon on smaller screens to toggle the sidebar's visibility.
+    *   On the right side, a user profile dropdown (`<x-dropdown>`) shows the user's name. Clicking it reveals links to "Profile" (`profile.edit`) and "Log Out".
+*   **Main Content Area**:
+    *   This is where the primary content for each page is rendered. It has a light gray background (`bg-gray-50`) to differentiate it from the white content cards.
+    *   Content is typically wrapped in a `py-12` and `max-w-7xl mx-auto sm:px-6 lg:px-8` container for consistent spacing and width.
+
+### 5.2.2. Administrator Role Screens
+
+The Administrator has the most extensive set of screens, designed for full control over the system's data and configuration.
+
+#### Admin Dashboard (`admin.dashboard`)
+*   **Purpose**: To provide a high-level, at-a-glance overview of restaurant performance.
+*   **Layout**: A grid of statistical cards and summary charts.
+*   **Components**:
+    *   **Stat Cards**: A row of four cards at the top, each showing a key metric: "Today's Sales", "Today's Profit", "Open Orders", and "Low-Stock Ingredients". Each card has a title, the large-font metric, and a small icon. These are likely powered by real-time data fetched in the `AdminController@index` method.
+    *   **Sales Chart**: A bar or line chart (e.g., using Chart.js, integrated via a custom Blade component) displaying sales over the last 7 days. The chart is interactive, with tooltips on hover showing the exact sales figure for each day.
+    *   **Recent Orders Table**: A summary table showing the last 5-10 orders, with columns for Order ID, Table, Total, and Status. The status is a colored badge (e.g., green for 'completed', yellow for 'pending').
+    *   **Quick Actions**: Buttons or links to common tasks, such as "Add New User" or "Generate Report".
+
+#### User Management (`admin.users.*`)
+*   **List Screen (`users.index`)**:
+    *   **Header**: A heading "User Management" and a `<x-primary-button>` on the right to "Add New User", which links to `users.create`.
+    *   **Search/Filter Bar**: A search input to filter users by name or email. A dropdown allows filtering by role (Admin, Waiter, Kitchen, Supplier).
+    *   **Users Table**: A responsive table listing all users.
+        *   **Columns**: `Name`, `Email`, `Role(s)`, `Date Joined`, and `Actions`. The "Role(s)" column displays colored badges for each role assigned to the user.
+        *   **Actions Column**: Contains a set of small icon buttons for each row:
+            *   **Edit**: A pencil icon linking to `users.edit`.
+            *   **Delete**: A trash can icon. Clicking this opens an Alpine.js-powered confirmation modal ("Are you sure you want to delete this user? This action cannot be undone.") to prevent accidental deletion. Confirming sends a `DELETE` request to `users.destroy`.
+    *   **Pagination**: Standard Laravel pagination links are displayed below the table if the number of users exceeds the per-page limit.
+*   **Create/Edit Screen (`users.create`, `users.edit`)**:
+    *   **Layout**: A single form within a card. The title is "Create New User" or "Editing {UserName}".
+    *   **Form Fields**:
+        *   `Name`: Text input.
+        *   `Email`: Email input.
+        *   `Password`: Password input. On the edit screen, this is optional, with helper text like "Leave blank to keep current password."
+        *   `Password Confirmation`: A second password field for confirmation when creating a new user or changing the password.
+        *   `Roles`: A multi-select box or a series of checkboxes allowing the admin to assign one or more roles from the `roles` table.
+    *   **Action Buttons**: A `<x-primary-button>` to "Save User" and a `<x-secondary-button>` or link to "Cancel" which returns to the user list.
+
+#### Ingredient Management (`admin.ingredients.*`)
+This set of screens mirrors the User Management structure, but for ingredients.
+
+*   **List Screen (`ingredients.index`)**:
+    *   **Header**: "Ingredient Inventory" and "Add New Ingredient" button.
+    *   **Search Bar**: To find ingredients by name.
+    *   **Ingredients Table**:
+        *   **Columns**: `Name`, `Current Quantity`, `Unit` (e.g., kg, L, pcs), `Unit Price`, and `Actions`.
+        *   **Low-Stock Highlighting**: Rows where the `quantity` is below a certain threshold are highlighted with a light red background to draw immediate attention.
+*   **Create/Edit Screen (`ingredients.create`, `ingredients.edit`)**:
+    *   **Form Fields**:
+        *   `Name`: Text input.
+        *   `Quantity`: Number input, `step="0.01"`.
+        *   `Unit`: Text input or a dropdown with predefined units.
+        *   `Unit Price`: Number input for cost calculation.
+
+#### Food Item Management (`admin.fooditems.*`)
+*   **List Screen (`fooditems.index`)**: Lists all menu items.
+    *   **Table Columns**: `Name`, `Price`, `Description` (truncated), `Ingredients`, `Actions`.
+    *   `Ingredients` column lists the ingredients required for the item, fetched from the `food_item_ingredient` pivot table.
+*   **Create/Edit Screen (`fooditems.create`, `fooditems.edit`)**:
+    *   **Basic Info**: Fields for `Name`, `Price`, and `Description` (a `textarea`).
+    *   **Ingredient Association**: This is the most complex part of the form.
+        *   It could be an "Ingredient Repeater" field powered by Alpine.js or Vue/React.
+        *   It consists of a dropdown to select an `Ingredient` and a number input for the `quantity` needed for one serving.
+        *   An "Add Ingredient" button dynamically adds a new row to the form. Each row has a "Remove" button.
+        *   This dynamic list is submitted as an array and processed in the `FoodItemController` to sync the `food_item_ingredient` pivot table.
+
+### 5.2.3. Waiter Role Screens
+
+The Waiter's interface is optimized for speed and efficiency on the restaurant floor, likely to be used on a tablet.
+
+#### Waiter Dashboard / Tables View (`waiter.tables.index`)
+*   **Purpose**: The primary workspace for waiters, showing the status of all tables.
+*   **Layout**: A visual, grid-based representation of the restaurant floor.
+*   **Components**:
+    *   **Table Grid**: The main area is a grid of "Table Cards". Each card represents a table.
+        *   **Card Content**: Displays the `table_number` in a large font.
+        *   **Status Styling**: The card's appearance changes based on its `status`:
+            *   **Available**: Green border or background (`border-green-500`), with text "Available". Clicking this card navigates to the order creation screen (`waiter.orders.create`) with the table number pre-filled.
+            *   **Occupied**: Orange/Yellow border (`border-orange-500`). It displays the current order total and the time elapsed since the order was placed. Clicking this card navigates to a view for managing the current order (e.g., `waiter.orders.add-to-current`).
+            *   **Ready to Serve**: If an order is fully 'cooked', the card might pulse or have a bright blue border (`border-blue-500`) with text "Order Ready", acting as a notification. This is updated via AJAX polling (`fetchTableStatuses`).
+*   **Real-time Updates**: The view uses JavaScript (`fetch`) to poll the `waiter.tables.fetch-statuses` endpoint every few seconds, updating the table statuses and order details without requiring a page reload. This is critical for a dynamic restaurant environment.
+
+#### Menu View (`waiter.menu`)
+*   A simple, read-only view of the menu, likely used as a reference.
+*   Food items are categorized and displayed in cards, showing the name, price, and description. A search bar is included at the top.
+
+#### Order Creation/Management
+*   **Create Screen (`orders.create`)**:
+    *   **Header**: "New Order for Table {number}".
+    *   **Item Selection**: A two-column layout. The left column lists all `fooditems`, categorized and searchable. Each item has a "+" and "-" button and a quantity input next to it, managed with Alpine.js.
+    *   **Order Summary (Right Column)**: As items are added, they appear in a "Current Order" summary list on the right. This list shows the item name, quantity, subtotal, and the running `Total Price`.
+    *   **Remark Field**: A `textarea` for adding special notes to the order.
+    *   **Action**: A "Place Order" button (`<x-primary-button>`) submits the form to `waiter.orders.store`.
+*   **Add to Order Screen (`orders.add`)**:
+    *   This screen is nearly identical to the create screen but is used for an 'occupied' table.
+    *   The "Current Order" summary on the right is pre-populated with items already in the active order.
+    *   The button is labeled "Add Items to Order" and submits to `waiter.orders.add-items`.
+
+### 5.2.4. Kitchen Role Screens
+
+#### Kitchen Display System (KDS) (`kitchen.orders`)
+*   **Purpose**: A real-time, high-contrast dashboard for kitchen staff.
+*   **Layout**: A multi-column layout, often referred to as a "Kanban" board style. Columns could be "New", "Preparing", "Cooked".
+*   **Order Tickets**:
+    *   Each incoming order appears as a "ticket" (a card) in the "New" column.
+    *   The ticket prominently displays the `table_number` and time since placed.
+    *   It lists each `OrderItem` with its `quantity`.
+    *   The ticket is color-coded based on how long it has been pending (e.g., turns yellow after 5 minutes, red after 10).
+*   **Interactivity**:
+    *   Clicking on an item within a ticket marks it as 'cooked', and the item text might be struck through or grayed out. This sends a POST request to `kitchen.orders.complete-item`.
+    *   A "Done" or "Complete Order" button on the ticket moves the entire ticket off-screen or to a "Completed" column. This sends a POST request to `kitchen.orders.complete-order`.
+*   **Real-time Updates**: Like the waiter's view, this screen polls the `kitchen.orders.fetch` endpoint constantly to receive new orders and status updates instantly. The UI is designed to minimize required interaction, providing information clearly and quickly.

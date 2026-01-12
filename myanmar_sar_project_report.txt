@@ -1,378 +1,105 @@
-# Project Title: "Myanmar Sar" - A Digital Restaurant Management System
+**Myanmar Sar Project Report**
 
-**Author:** (NCC Student)
-**Date:** January 7, 2026
-**Project Report in Partial Fulfillment of the Level 5 Diploma in Computing (L5DC)**
+**1. Project Overview**
 
----
-# Abstract
+The "Myanmar Sar" project is a web-based restaurant management system designed to streamline various restaurant operations. Built using the Laravel framework, it provides a comprehensive solution for managing orders, ingredients, food items, tables, and users. The system caters to different user roles within a restaurant, including administrators, waiters, kitchen staff, and suppliers, each with a specific set of permissions and functionalities. The application aims to replace manual processes with a digitized and automated system, improving efficiency, reducing errors, and providing better insights into the restaurant's performance through reporting features.
 
-This report details the analysis, design, development, and evaluation of "Myanmar Sar," a comprehensive, web-based restaurant management system. The project is specifically tailored for a popular, mid-sized restaurant in Sule, Yangon, which currently relies on inefficient and error-prone manual processes. The primary aim of this project is to digitally transform the restaurant's core operations—including reservations, order-taking, kitchen communication, billing, and inventory management—to enhance operational efficiency, improve the customer experience, and provide valuable business insights through data analytics.
+**2. Architecture**
 
-The report begins with a thorough investigation of the current business processes and their inherent challenges, including a narrative exploration of the daily operational friction. A detailed feasibility study is presented, evaluating the project's viability from technical, economic, legal, and operational standpoints, including a multi-year cost-benefit analysis and a review of alternative technologies. The system requirements are then meticulously defined, categorized using the MoSCoW method, and elaborated through comprehensive use case specifications and non-functional specifications.
+The application follows the classic Model-View-Controller (MVC) architectural pattern, which is standard for Laravel projects.
 
-The design phase is documented through detailed descriptions of system architecture, use case diagrams, class diagrams with full data dictionaries, and sequence diagrams for multiple complex workflows, providing a complete blueprint of the application. The implementation follows an agile DSDM methodology, with the development of the core "Order Management" module presented as the first time-box. This section includes textual descriptions of screen prototypes and a comprehensive test plan with dozens of detailed test cases to ensure software quality and robustness.
+*   **Model**: The models are located in the `app/Models/` directory. They are responsible for representing the application's data structure and interacting with the database. Key models include `User`, `Role`, `Order`, `FoodItem`, `Ingredient`, and `Table`. These models define the relationships between different data entities (e.g., a `User` has a `Role`, an `Order` has many `OrderItems`).
 
-Finally, the report outlines granular plans for deployment, data migration, and staff training, followed by a concluding evaluation of the project against its initial objectives, a discussion of limitations and lessons learned, and a forward-looking roadmap for potential future enhancements. The entire document serves as a complete academic record of the project lifecycle, from conception to deployment planning, aiming for a word count appropriate for a final year submission.
+*   **View**: The views are located in the `resources/views/` directory and are written using Laravel's Blade templating engine. They are responsible for presenting the data to the user and capturing user input. The views are organized into folders based on their functionality (e.g., `admin`, `waiter`, `kitchen`). The project uses Tailwind CSS for styling, which is a utility-first CSS framework that allows for rapid UI development. Alpine.js is used for adding client-side interactivity to the Blade templates.
 
----
-# Chapter 1: Introduction
+*   **Controller**: The controllers are located in the `app/Http/Controllers/` directory. They act as the intermediary between the Models and Views, handling incoming HTTP requests, processing user input, interacting with the database through the models, and loading the appropriate views with the necessary data. The controllers are organized by user roles, such as `AdminController`, `WaiterController`, and `KitchenController`, which helps in managing the business logic for each role.
 
-## 1.1. Project Overview and Background
+**3. Core Features & User Roles**
 
-The restaurant industry in Yangon is a vibrant, chaotic, and highly competitive sector. While traditional establishments have long relied on their culinary appeal and reputation, the modern Food & Beverage (F&B) landscape increasingly demands operational efficiency and a superior customer experience. The proliferation of smartphones and mobile internet has fundamentally altered consumer expectations; patrons now expect speed, accuracy, and convenience as standard. The rise of digital technology has introduced new paradigms in restaurant management, with Point of Sale (POS) systems, Kitchen Display Systems (KDS), and online reservation platforms becoming standard tools for survival and success. According to a fictional 2024 survey by the "Myanmar F&B Association," restaurants in Yangon that adopted digital POS systems reported a 15% average increase in table turnover and a 25% reduction in ordering errors.
+The system has four main user roles, each with a dedicated dashboard and a set of features tailored to their responsibilities.
 
-However, many small to medium-sized local restaurants, like our client "Myanmar Sar" in Sule, have been slow to adopt these technologies. They continue to operate using manual, paper-based systems for critical functions such as taking reservations, writing down customer orders, managing kitchen workflow, and processing payments. While this approach may have been sufficient in the past, it creates significant operational bottlenecks as the business grows. These inefficiencies manifest as longer customer wait times, errors in orders, difficulties in tracking sales, and an overall lack of data for strategic decision-making.
+*   **Admin**: The administrator has the highest level of access and is responsible for managing the entire system. The admin's features include:
+    *   **Dashboard**: An overview of the restaurant's activities.
+    *   **User Management**: CRUD (Create, Read, Update, Delete) operations for users.
+    *   **Ingredient Management**: CRUD operations for ingredients.
+    *   **Food Item Management**: CRUD operations for food items.
+    *   **Table Management**: CRUD operations for tables.
+    *   **Order Management**: Viewing and managing all orders.
+    *   **Reporting**: Access to various reports, including sales reports, profit and loss reports, and ingredient import reports.
 
-This project, titled "Myanmar Sar," aims to address these critical gaps by developing a bespoke, web-based restaurant management system. The system is designed to be a holistic solution, digitizing the entire workflow from the moment a customer makes a reservation to the final bill payment. It is built with the specific context of a Myanmar restaurant in mind, prioritizing an intuitive user interface that requires minimal training for staff who may not be tech-savvy.
+*   **Waiter**: The waiter is responsible for taking and managing customer orders. The waiter's features include:
+    *   **Dashboard**: A view of their current orders and table statuses.
+    *   **Menu**: Access to the list of available food items.
+    *   **Order Creation**: Creating new orders for customers.
+    *   **Order Management**: Adding items to existing orders, updating order statuses, and managing tables.
+    *   **Order History**: Viewing their past orders.
 
-The proposed system will be developed using a stack of proven and cost-effective technologies: PHP for the backend, MySQL for the database, and a standard HTML/CSS/JavaScript frontend. This choice ensures the system is robust, scalable, and maintainable without incurring high licensing fees, making it an accessible solution for the target business.
+*   **Kitchen**: The kitchen staff is responsible for preparing the food orders. The kitchen's features include:
+    *   **Dashboard**: A real-time view of incoming orders.
+    *   **Order Status**: Marking orders as "in progress" or "completed".
 
-## 1.2. Current Business History and Processes
+*   **Supplier**: Although less detailed in the provided file structure, a `supplier` role is defined, suggesting a feature for managing ingredient supplies and imports. This would likely involve:
+    *   **Ingredient Import Management**: Creating and managing ingredient import records.
 
-"Myanmar Sar" was established in 2015 and has since carved out a niche for itself in Yangon's dense culinary market, specializing in authentic, home-style Myanmar cuisine. Located in the prime commercial district of Sule, it attracts a diverse clientele of office workers, tourists, and local families.
+**4. Database Schema**
 
-**A Day in the Life: The Manual Workflow**
-To truly understand the friction in their current process, consider a typical evening for a waiter named Aung.
-*   **7:00 PM:** A party of four arrives. Aung greets them and scans the dining room. He consults the manager's logbook, a large, messy ledger filled with crossed-out names and scribbled times. He finds a table, but is unsure if it's reserved for a 7:30 PM booking. After a confusing exchange with the manager, he seats the party.
-*   **7:10 PM:** Aung takes the order. The customers have questions about ingredients. Aung, being new, has to run to the kitchen to ask the chef. He returns, takes the order on his notepad: two Mohinga, one Shan Noodles with "no peanuts," and one Tea Leaf Salad.
-*   **7:15 PM:** He tears the page from his notepad and walks it to the kitchen, placing it in a queue of other handwritten dockets. The head chef squints at Aung's handwriting, mistaking "no peanuts" for "more peanuts."
-*   **7:35 PM:** The food comes out. The Shan Noodles are sent back due to the peanut allergy. Aung apologizes profusely and rushes back to the kitchen to get a new order prioritized, causing tension with the busy chefs.
-*   **8:15 PM:** The party is ready to pay. They want to split the bill. Aung collects the greasy, stained paper dockets from the kitchen spike and retreats to a corner with a calculator. He manually adds up the items, makes a mistake, recounts, and finally produces four separate totals. The process takes ten minutes, during which the table is occupied and cannot be turned over.
+The database schema is defined through a series of migration files in the `database/migrations/` directory. The key tables are:
 
-This scenario, repeated countless times a day, highlights the systemic nature of the problem. It's not about a single employee's performance, but a flawed process that breeds inefficiency and errors.
+*   `users`: Stores user information, including name, email, and password.
+*   `roles`: Stores the different user roles (e.g., 'admin', 'waiter', 'kitchen').
+*   `role_user`: A pivot table for the many-to-many relationship between users and roles.
+*   `ingredients`: Stores information about each ingredient, such as name, unit, and quantity.
+*   `food_items`: Stores information about each food item on the menu, including name, price, and description.
+*   `food_item_ingredient`: A pivot table for the many-to-many relationship between food items and ingredients, specifying the quantity of each ingredient required for a food item.
+*   `orders`: Stores information about each order, including the table number, status, and total amount.
+*   `order_items`: Stores the items included in each order, linking to the `food_items` table and specifying the quantity.
+*   `tables`: Stores information about the restaurant's tables, such as table number and capacity.
+*   `ingredient_imports`: Stores records of ingredient imports.
+*   `table_bill_out_records`: Stores records of billed out tables.
+*   `expense_groups`: Groups expenses into categories.
+*   `expense_details`: Stores details of each expense.
 
-## 1.3. Current Business Issues and Challenges
+**5. User Roles and Permissions**
 
-The manual system at "Myanmar Sar" presents a host of interconnected problems, as illustrated by the narrative above.
+The application uses a custom role-based permission system.
 
-- **Operational Inefficiency:**
-  - **Service Delays:** Every step is a manual hand-off, creating significant latency between taking an order and serving it.
-  - **Table Turnover:** Slow billing and inefficient seating directly impact table turnover rates, capping the restaurant's revenue potential during peak hours.
-  - **Staff Workload:** Waiters spend more time on logistics (walking to the kitchen, calculating bills) than on customer service.
+*   **`RoleMiddleware`**: This middleware, located at `app/Http/Middleware/RoleMiddleware.php`, is used to restrict access to certain routes based on the user's role. It checks if the authenticated user has the required role before allowing them to proceed.
 
-- **High Potential for Human Error:**
-  - **Order Inaccuracy:** Illegible handwriting, misheard requests, and forgotten modifiers are common. This leads to food wastage and customer dissatisfaction. A recent fictional online review stated, "Great food, but they got my order wrong twice. Not worth the hassle."
-  - **Billing Errors:** Manual bill calculation is a major point of failure, leading to overcharging (customer anger) or undercharging (revenue loss).
-  - **Reservation Conflicts:** The paper logbook is a recipe for disaster, frequently leading to double bookings or lost reservations.
+*   **`hasRole` method**: The `User` model (`app/Models/User.php`) contains a `hasRole` method that checks if a user has a specific role. This method is used by the `RoleMiddleware` to perform the authorization check. The User model also defines a `roles` relationship, which is a many-to-many relationship with the `Role` model.
 
-- **Lack of Data and Analytics:** The business is flying blind.
-  - **No Sales Data:** Management has no reliable way to know which dishes are popular, what the average spend per customer is, or who their most effective waiters are.
-  - **No Inventory Insight:** The chef relies on gut feeling for inventory, leading to stock-outs of popular items or wastage of perishable goods.
-  - **No Customer Data:** The restaurant has no record of its patrons, missing out on opportunities for loyalty programs or targeted marketing.
+*   **Role Seeder**: The `database/seeders/RoleSeeder.php` file is used to populate the `roles` table with the default roles: 'admin', 'waiter', 'kitchen', and 'supplier'.
 
-- **Scalability Issues:** The current system is at its breaking point. The restaurant cannot get any busier without a complete collapse in service quality. Expansion to a second location or launching a delivery service is an impossibility.
+**6. Routing**
 
-## 1.4. Proposed System Scope and Aims
+The application's routes are defined in `routes/web.php`. The routes are grouped by middleware to apply authentication and role-based access control.
 
-**Aim:** To develop a robust, user-friendly, and cost-effective web-based system for "Myanmar Sar" restaurant that automates and streamlines its core business processes, thereby improving operational efficiency, enhancing the customer experience, and enabling data-driven management.
+*   **Authentication Routes**: The routes for login, registration, and password reset are defined here, typically using `Auth::routes()`.
+*   **Admin Routes**: Routes prefixed with `/admin` are grouped and protected by the `auth` and `role:admin` middleware. These routes map to the methods in the `AdminController`, `UserController`, `IngredientController`, `FoodItemController`, etc.
+*   **Waiter Routes**: Routes prefixed with `/waiter` are protected by the `auth` and `role:waiter` middleware and are handled by the `WaiterController`.
+*   **Kitchen Routes**: Routes prefixed with `/kitchen` are protected by the `auth` and `role:kitchen` middleware and are handled by the `KitchenController`.
 
-**Key Features within Scope:**
-- **Digital Reservation Management:** A graphical, calendar-based interface to manage table bookings.
-- **Digital Menu & Order Management:** An intuitive interface for waiters to take orders on a tablet. Orders are transmitted instantly to a Kitchen Display System (KDS).
-- **Kitchen Display System (KDS):** A screen in the kitchen that displays incoming orders in a clear, prioritized format.
-- **Automated Billing and Payment Processing:** The system will automatically generate an accurate, itemized bill, with options to split the bill.
-- **Basic Inventory Control:** A module to track the stock levels of key ingredients, with alerts for low stock.
-- **Centralized Admin Dashboard:** A secure web portal for the manager to configure the system, manage staff, and view data.
-- **Reporting and Analytics:** The system will automatically generate reports on daily sales, best-selling items, and other key performance indicators.
+**7. Frontend**
 
----
-# Chapter 2: Similar Product Comparison and Investigation
+The frontend of the application is built with:
 
-## 2.1. Introduction to Market Alternatives
+*   **Blade Templates**: Laravel's templating engine is used to create the views.
+*   **Tailwind CSS**: A utility-first CSS framework for styling the. The configuration is in `tailwind.config.js`.
+*   **Alpine.js**: A lightweight JavaScript framework for adding client-side interactivity.
+*   **Vite**: A modern frontend build tool that is used for asset bundling. The configuration is in `vite.config.js`.
 
-To inform our design, we investigated two existing systems, giving them fictional names: "GourmetCloud," representing a high-end, cloud-based solution, and "StoreFront Pro," representing a traditional, on-premise system.
+**8. Dependencies**
 
-### **2.1.1. Competitor A: "GourmetCloud"**
+*   **Backend (from `composer.json`)**:
+    *   `php`: ^8.2
+    *   `laravel/framework`: ^11.0 (Inferred from file structure)
+    *   `laravel/sanctum`: For API authentication.
+    *   And other standard Laravel packages.
 
-- **Company Background:** A San Francisco-based startup, venture-capital-funded, targeting upscale restaurants in major global cities.
-- **Target Market:** Fine dining restaurants, trendy cafes, and multi-branch chains that prioritize features and user experience over cost.
-- **Pricing Model:** Subscription-based (SaaS). Tiers range from $79/month per terminal for the basic plan to $199/month for the enterprise plan with advanced analytics.
-- **Feature Breakdown:**
-  - **UI/UX:** Extremely polished, minimalist, and gesture-based. Runs as a native app on iPads.
-  - **Table Management:** Advanced graphical interface with drag-and-drop seating and a detailed reservation timeline.
-  - **Ordering:** Rich modifiers, easy-to-add customer notes, and prompts for upselling.
-  - **Analytics:** Powerful analytics dashboard with predictive forecasting, customer spending habit analysis, and marketing integration.
-  - **Integrations:** Integrates with dozens of third-party services for accounting (Xero), delivery (UberEats), and reservations (OpenTable).
-
-- **SWOT Analysis for GourmetCloud:**
-  - **Strengths:** Superior user experience, powerful features, scalable cloud architecture.
-  - **Weaknesses:** High recurring cost, dependent on a stable internet connection, may be too complex for a simple restaurant.
-  - **Opportunities:** Expanding into the mid-tier market with a "lite" version.
-  - **Threats:** Competition from more affordable, localized POS systems.
-
-### **2.1.2. Competitor B: "StoreFront Pro"**
-
-- **Company Background:** An older, established company that has been selling POS systems for two decades.
-- **Target Market:** Small, independent retail stores and restaurants.
-- **Pricing Model:** One-time perpetual license fee ($1,200) plus an optional annual support contract ($300/year).
-- **Feature Breakdown:**
-  - **UI/UX:** Dated, text-heavy interface. Runs on Windows-based touch terminals. Less intuitive, requiring significant staff training.
-  - **Reliability:** Extremely robust and fast, as it runs on a closed local network. Not affected by internet outages.
-  - **Features:** Provides all the basic functions (order taking, billing, basic reports) but lacks advanced capabilities. The KDS is a separate, expensive add-on.
-  - **Customizability:** The system is fairly rigid, with limited options for customization.
-
-- **SWOT Analysis for StoreFront Pro:**
-  - **Strengths:** High reliability, affordable one-time cost, not internet-dependent.
-  - **Weaknesses:** Poor user interface, limited feature set, difficult to scale.
-  - **Threats:** Losing market share to modern, user-friendly cloud systems like GourmetCloud.
-
-## 2.2. Conclusion of Investigation
-
-The investigation reveals a clear gap for a "best of both worlds" solution for a client like "Myanmar Sar."
-- **GourmetCloud** is too expensive and its reliance on the cloud makes it unsuitable for a location with unstable internet.
-- **StoreFront Pro** is reliable and affordable but its poor usability would be a major hurdle for staff, and its lack of an integrated KDS fails to solve a key operational bottleneck.
-
-Therefore, the "Myanmar Sar" project is justified. We will build an **on-premise** system for reliability, but with a **modern, intuitive user interface** inspired by GourmetCloud, and with an **integrated KDS** as a core, non-negotiable feature.
-
----
-# Chapter 3: Feasibility Study
-
-## 3.1. Technical Feasibility & Technology Alternatives
-
-- **Methodology:** As previously stated, DSDM/Agile is the chosen methodology. Its iterative nature is perfect for this project.
-
-- **Technology Alternatives Analysis:**
-  - **Backend:**
-    - **PHP (Chosen):** Mature, vast community, excellent documentation. The LAMP stack is easy to set up and very cost-effective. Performance is more than sufficient for an on-premise web application of this scale.
-    - **Python (with Django/Flask):** Also an excellent choice. Django's "batteries-included" approach could speed up development. However, the learning curve is steeper for beginners, and deployment can be slightly more complex than a standard LAMP stack.
-    - **Node.js (with Express):** Its asynchronous nature offers high performance, but this is less critical for an internal application with a limited number of concurrent users. The single-threaded nature of Node.js also requires more careful error handling to prevent the entire application from crashing.
-    - **Justification:** PHP was chosen for its simplicity, ease of deployment, and widespread support, which align perfectly with the project's goal of creating a maintainable, cost-effective system.
-
-  - **Database:**
-    - **MySQL (Chosen):** A world-class, reliable, open-source relational database. It is perfect for the transactional data of a POS system (orders, bills, etc.).
-    - **PostgreSQL:** Another outstanding open-source relational database, often considered more feature-rich and standards-compliant than MySQL. However, for the scope of this project, these advanced features are not necessary, and MySQL is arguably easier for beginners to manage.
-    - **MongoDB (NoSQL):** A NoSQL database offers flexibility but lacks the rigid structure and transactional integrity (ACID compliance) of a relational database, which is critical for financial data like orders and bills. It would be a poor choice for this project.
-    - **Justification:** MySQL provides the required reliability and structure for our transactional data, while being easy to set up and manage.
-
-  - **Frontend:**
-    - **Bootstrap (Chosen):** A CSS framework that allows for rapid development of a responsive, mobile-first UI without the overhead of a full JavaScript framework.
-    - **React/Vue.js:** These powerful JavaScript frameworks would create a more dynamic, single-page application feel. However, they add significant complexity to the development and build process, which is not justified for the scope of this project. A simpler, server-rendered application with Bootstrap is sufficient and easier to maintain.
-    - **Justification:** Bootstrap provides the necessary UI components and responsiveness with minimal complexity.
-
-## 3.2. Economic Feasibility & ROI Analysis
-
-- **Costs:**
-  - One-time Hardware Cost: $2,600
-  - Development Cost (Academic): $0
-  - Annual Maintenance (Estimated): $300 (for potential hardware replacement/repairs)
-
-- **Financial Projections (3-Year ROI Analysis):**
-
-|                                      | Year 1      | Year 2      | Year 3      |
-|--------------------------------------|-------------|-------------|-------------|
-| **Benefits**                         |             |             |             |
-| Increased Revenue (5% from efficiency) | $10,000     | $10,500     | $11,025     |
-| Reduced Food Waste (15% savings)       | $4,500      | $4,725      | $4,961      |
-| Reduced Billing Error Loss           | $1,000      | $1,000      | $1,000      |
-| **Total Annual Benefit**             | **$15,500** | **$16,225** | **$16,986** |
-|                                      |             |             |             |
-| **Costs**                            |             |             |             |
-| Initial Hardware Investment          | $2,600      | $0          | $0          |
-| Annual Maintenance                   | $300        | $300        | $300        |
-| **Total Annual Cost**                | **$2,900**  | **$300**    | **$300**    |
-|                                      |             |             |             |
-| **Net Annual Cash Flow**             | **$12,600** | **$15,925** | **$16,686** |
-| **Cumulative Cash Flow**             | **$12,600** | **$28,525** | **$45,211** |
-
-- **Payback Period:** The initial investment is $2,900. The net cash flow in Year 1 is $12,600. The payback period is therefore very short, approximately **3 months** ($2,900 / $15,500 * 12 months).
-- **Return on Investment (ROI) over 3 years:**
-  - Total Net Benefit = $45,211
-  - Total Cost = $2,900 + $300 + $300 = $3,500
-  - ROI = (($45,211 - $3,500) / $3,500) * 100 = **1191%**
-
-**Conclusion of Economic Feasibility:** The project is overwhelmingly feasible from an economic standpoint, with a very rapid payback period and an extremely high ROI.
-
-## 3.3. Legal, Ethical, Social, and Professional Issues (LESPI)
-
-- **Legal:**
-  - **Data Privacy:** We will adhere to Myanmar's Electronic Transactions Law. Any customer data (e.g., phone numbers for reservations) will be stored securely and used only for the purpose it was collected for.
-  - **Labor Law:** The system's performance tracking features will not be used in a way that contravenes local labor laws regarding employee monitoring.
-- **Ethical:**
-  - **Transparency:** All staff will be informed about what the system tracks and why. The goal is to improve service, not to engage in punitive surveillance.
-  - **Data Integrity:** We have an ethical duty to ensure the system is rigorously tested to prevent bugs that could lead to incorrect billing.
-- **Social:**
-  - **Digital Divide:** We must be mindful that not all staff will be comfortable with technology. The training plan is critical to ensure no employee is left behind.
-  - **Job Augmentation:** We will frame the project as a tool to make staff's jobs easier and more fulfilling, not as a step towards replacing them.
-- **Professional (BCS Code of Conduct):**
-  - **Public Interest:** We will ensure the system is reliable and does not harm the public (customers or staff).
-  - **Professional Competence:** We will only undertake tasks for which we are competent and will be transparent about the system's limitations.
-  - **Integrity:** We will act with honesty and integrity in all our dealings with the client.
-
-## 3.4. Operational Feasibility & Change Management Plan
-
-- **Stakeholder Analysis:**
-  - **Owner:** High interest, high power. Must be kept fully informed and involved in key decisions.
-  - **Manager:** High interest, medium power. Key user for admin functions; their buy-in is critical.
-  - **Waiters/Chefs:** Medium interest, low power. They are the primary end-users. Their feedback is essential for usability.
-- **Communication Plan:** A weekly 30-minute progress meeting with the owner/manager. Regular, informal feedback sessions with waiters.
-- **Training Plan:** A detailed, hands-on training plan as outlined in Chapter 6.
-- **Overcoming Resistance:**
-  - **Involve Staff Early:** Get feedback on UI prototypes from waiters.
-  - **Highlight Benefits:** Show them how the system reduces their stress (no more handwriting, no more manual calculations).
-  - **Appoint Champions:** Identify one or two tech-savvy waiters who can act as "champions" to help their colleagues.
-
----
-# Chapter 4: Foundations - System Requirements
-
-## 4.1. Detailed Use Case Specifications
-
-### **UC-001: Staff Login**
-- **Use Case ID:** UC-001
-- **Name:** Staff Login
-- **Primary Actor:** Waiter, Administrator
-- **Description:** Allows an authenticated user to gain access to the system.
-- **Pre-conditions:** The user must have a valid username and password created by an administrator.
-- **Post-conditions:** On success, the user is logged in and a session is created. On failure, the user remains on the login page.
-- **Main Flow:**
-  1. User navigates to the login page.
-  2. System displays fields for "Username" and "Password".
-  3. User enters their username and password.
-  4. User clicks the "Login" button.
-  5. System encrypts the entered password.
-  6. System queries the `users` table for a record matching the username and encrypted password.
-  7. On successful match, System determines the user's role.
-  8. System creates a session and stores `userID` and `role`.
-  9. System redirects the user to their respective dashboard (Waiter to Table Layout, Admin to Admin Dashboard).
-- **Alternative Flows:**
-  - **7a. No Match Found:** If the query returns no match, the System displays the error "Invalid username or password" and the user remains on the login page.
-- **Exception Flows:**
-  - **6a. Database Connection Fails:** If the system cannot connect to the database, it displays a system error page: "Error: Cannot connect to the database. Please contact support."
-
-### **UC-002: Create New Order**
-- **Use Case ID:** UC-002
-- **Name:** Create New Order
-- **Primary Actor:** Waiter
-- **Description:** Allows a waiter to create a new order for a customer at a table.
-- **Pre-conditions:** Waiter is logged in. The target table exists.
-- **Post-conditions:** A new order record is created in the database. The order is displayed on the KDS.
-- **Main Flow:**
-  1. Waiter selects an occupied table from the Table Layout screen.
-  2. System displays the Order Entry screen for that table, showing any existing items for the current order.
-  3. Waiter selects a menu category.
-  4. System displays the menu items for that category.
-  5. Waiter taps on a menu item.
-  6. System adds the item to the current order list on the right panel with a quantity of 1.
-  7. Waiter repeats steps 3-6 for all items.
-  8. Waiter reviews the order with the customer.
-  9. Waiter clicks the "Send to Kitchen" button.
-  10. System creates a new record in the `orders` table and associated records in the `order_items` table.
-  11. System pushes a notification to the KDS interface with the new order details.
-  12. System displays a confirmation message "Order Sent" to the waiter.
-- **Alternative Flows:**
-  - **6a. Increase Quantity:** If an item is already in the order list, tapping it again increases its quantity by 1.
-  - **6b. Add Notes:** Waiter can tap a "notes" icon next to an item in the order list to add a text modifier (e.g., "extra spicy").
-- **Exception Flows:**
-  - **11a. KDS Offline:** If the push notification to the KDS fails, the system logs the error and displays a non-intrusive alert to the waiter: "Warning: KDS appears to be offline." The order is still saved.
-
-(... and so on for FR-M-03, FR-M-04, FR-M-05, FR-M-06)
-
-## 4.2. Detailed Non-Functional Requirements
-
-- **NFR-01: Usability:**
-  - The UI must be designed for touch interaction on a 10-inch tablet.
-  - Core functions (adding an item, sending an order) must require no more than 3 taps.
-  - Error messages must be clear, concise, and in plain language.
-- **NFR-02: Performance:**
-  - The system must support up to 10 waiters using the system concurrently during peak hours without noticeable degradation.
-  - Database queries for fetching the menu must execute in under 200ms.
-- **NFR-03: Reliability:**
-  - The system will be deployed on a server with a redundant power supply.
-  - Database backups will be performed automatically every night at 3 AM.
-- **NFR-04: Security:**
-  - **Password Security:** All user passwords will be hashed using the `password_hash()` function in PHP, which uses the robust bcrypt algorithm.
-  - **Role-Based Access Control (RBAC):** Before any action is performed, the backend will check the user's role (stored in the session) to ensure they have the necessary permissions.
-  - **SQL Injection Prevention:** All database queries will be executed using prepared statements (via PDO or MySQLi) to prevent SQL injection attacks.
-  - **Cross-Site Scripting (XSS) Prevention:** All user-supplied data will be properly escaped using `htmlspecialchars()` before being rendered in the HTML to prevent XSS.
-
----
-# Chapter 5: Exploration & Engineering - System Design
-
-## 5.1. Database Design and SQL Schema
-
-The following are the SQL `CREATE TABLE` statements for the core database schema.
-
-```sql
--- Users Table
-CREATE TABLE `users` (
-  `userID` INT AUTO_INCREMENT PRIMARY KEY,
-  `username` VARCHAR(50) NOT NULL UNIQUE,
-  `password_hash` VARCHAR(255) NOT NULL,
-  `full_name` VARCHAR(100),
-  `role` ENUM('admin', 'waiter', 'kitchen') NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- MenuItems Table
-CREATE TABLE `menu_items` (
-  `itemID` INT AUTO_INCREMENT PRIMARY KEY,
-  `item_name` VARCHAR(100) NOT NULL,
-  `description` TEXT,
-  `price` DECIMAL(10, 2) NOT NULL,
-  `category` VARCHAR(50),
-  `is_available` BOOLEAN DEFAULT TRUE,
-  `image_url` VARCHAR(255)
-);
-
--- Tables Table
-CREATE TABLE `restaurant_tables` (
-  `tableID` INT AUTO_INCREMENT PRIMARY KEY,
-  `table_name` VARCHAR(20) NOT NULL,
-  `capacity` INT NOT NULL,
-  `status` ENUM('available', 'occupied', 'needs_cleaning') DEFAULT 'available'
-);
-
--- Orders Table
-CREATE TABLE `orders` (
-  `orderID` INT AUTO_INCREMENT PRIMARY KEY,
-  `tableID` INT,
-  `userID` INT,
-  `status` ENUM('in_progress', 'completed', 'paid', 'cancelled') DEFAULT 'in_progress',
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`tableID`) REFERENCES `restaurant_tables`(`tableID`),
-  FOREIGN KEY (`userID`) REFERENCES `users`(`userID`)
-);
-
--- OrderItems Table
-CREATE TABLE `order_items` (
-  `orderItemID` INT AUTO_INCREMENT PRIMARY KEY,
-  `orderID` INT,
-  `itemID` INT,
-  `quantity` INT NOT NULL,
-  `notes` VARCHAR(255),
-  FOREIGN KEY (`orderID`) REFERENCES `orders`(`orderID`),
-  FOREIGN KEY (`itemID`) REFERENCES `menu_items`(`itemID`)
-);
-```
-
-## 5.2. Detailed Screen Descriptions
-
-- **Screen 1: Table Layout (Waiter Dashboard)**
-  - **Layout:** A full-screen graphical view. The background is a static image of the restaurant's floor plan. On top of this, rectangular or circular shapes represent the tables.
-  - **Components:**
-    - Each shape has the table name (e.g., "T1", "T2") inside it.
-    - The color of the shape indicates status: Green for 'available', Yellow for 'occupied', Red for 'needs_cleaning'.
-    - A "Logout" button is in the top-right corner.
-  - **Interaction:** Tapping on a table shape navigates the user to the Order Entry screen for that table.
-
-- **Screen 2: Order Entry**
-  - **Layout:** A two-column layout.
-  - **Left Column (Menu):**
-    - A dropdown or series of buttons for menu categories (e.g., "Curries", "Noodles", "Drinks").
-    - Below this, a scrollable list of menu items within the selected category. Each item shows its name and price.
-  - **Right Column (Current Order):**
-    - Displays the table name at the top.
-    - A list of items already added to the order. Each row shows: Item Name, Quantity (with +/- buttons to adjust), Price. A small "notes" icon and a "remove" (X) icon are also present.
-    - At the bottom, the subtotal, tax, and total are displayed.
-    - Two prominent buttons at the very bottom: "Send to Kitchen" (blue) and "Go to Bill" (green).
-  - **Interaction:** Tapping an item on the left adds it to the right. Tapping the buttons on the right modifies the order.
-
----
-# Chapter 6: Deployment, Training, and Maintenance
-
-(...This would be further expanded with Gantt charts described in text, detailed checklists for deployment, and sample training feedback forms...)
-
----
-# Chapter 7: Evaluation and Conclusion
-
-(...This would be expanded with a detailed "Lessons Learned" section, reflecting on the project management, technical challenges, and successes. The future enhancements would be fleshed out into mini-proposals...)
+*   **Frontend (from `package.json`)**:
+    *   `alpinejs`: For client-side interactivity.
+    *   `autoprefixer`: For CSS vendor prefixes.
+    *   `axios`: For making HTTP requests from the client-side.
+    *   `laravel-vite-plugin`: To integrate Vite with Laravel.
+    *   `postcss`: For CSS processing.
+    *   `tailwindcss`: The CSS framework.
+    *   `vite`: The build tool.
