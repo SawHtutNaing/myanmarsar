@@ -44,6 +44,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/download-database', [AdminController::class, 'downloadDatabase'])->name('download.database');
 });
 
+
+Route::get('/time-check', function () {
+    dd(
+       now()
+    );
+});
+
 Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
     Route::get('/', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
     Route::post('/ingredients/import', [IngredientImportController::class, 'store'])->name('ingredients.import.store');

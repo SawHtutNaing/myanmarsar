@@ -31,6 +31,10 @@
                     @if($imports->isEmpty())
                         <p>No ingredient imports found for the selected period.</p>
                     @else
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <p class="text-md font-bold text-gray-800">Total Imported Quantity: <span class="text-blue-600">{{ $totalQuantity }}</span></p>
+                            <p class="text-md font-bold text-gray-800">Total Import Cost: <span class="text-red-600">${{ number_format($totalCost, 2) }}</span></p>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
@@ -93,10 +97,7 @@
                             </table>
                         </div>
 
-                        <div class="mt-6 p-4 bg-gray-50 rounded-lg shadow-sm">
-                            <p class="text-md font-bold text-gray-800">Total Imported Quantity: <span class="text-blue-600">{{ $totalQuantity }}</span></p>
-                            <p class="text-md font-bold text-gray-800">Total Import Cost: <span class="text-red-600">${{ number_format($totalCost, 2) }}</span></p>
-                        </div>
+
                     @endif
                 </div>
             </div>
