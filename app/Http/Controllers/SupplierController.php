@@ -7,8 +7,14 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
+
+
     public function ingredientImportReport(Request $request)
     {
+        $lowStockIngredients = \App\Models\Ingredient::whereNotNull('low_stock_alert_quantity')
+            ->whereColumn('quantity', '<=', 'low_stock_alert_quantity')
+            ->get();
+
         $query = IngredientImport::with('ingredient');
 
         if ($request->filled('start_date')) {
@@ -26,7 +32,7 @@ class SupplierController extends Controller
             return $import->quantity * $import->unit_price;
         });
 
-        return view('supplier.reports.ingredient_imports', compact('imports', 'totalQuantity', 'totalCost'));
+        return view('supplier.reports.ingredient_imports', compact('imports', 'totalQuantity', 'totalCost' , 'lowStockIngredients'));
     }
 
     public function editIngredientImport($id)

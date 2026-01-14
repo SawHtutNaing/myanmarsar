@@ -15,6 +15,7 @@ class Ingredient extends Model
         'unit',
         'quantity',
         'unit_price',
+        'low_stock_alert_quantity',
     ];
 
     /**

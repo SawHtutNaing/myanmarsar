@@ -20,7 +20,11 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        $lowStockIngredients = Ingredient::whereNotNull('low_stock_alert_quantity')
+            ->whereColumn('quantity', '<=', 'low_stock_alert_quantity')
+            ->get();
+
+        return view('admin.dashboard', compact('lowStockIngredients'));
     }
 
     public function ordersIndex()

@@ -11,6 +11,30 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold mb-4">Admin Dashboard</h3>
 
+                    @if($lowStockIngredients->isNotEmpty())
+                        <div class="mb-8">
+                            <h4 class="text-lg font-bold mb-2 text-red-600">Low Stock Alerts</h4>
+                            <table class="min-w-full bg-white">
+                                <thead>
+                                    <tr>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-red-100 text-left text-sm font-semibold text-gray-700">Ingredient Name</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-red-100 text-left text-sm font-semibold text-gray-700">Current Quantity</th>
+                                        <th class="py-2 px-4 border-b border-gray-200 bg-red-100 text-left text-sm font-semibold text-gray-700">Low Stock Alert Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($lowStockIngredients as $ingredient)
+                                        <tr>
+                                            <td class="py-2 px-4 border-b border-gray-200">{{ $ingredient->name }}</td>
+                                            <td class="py-2 px-4 border-b border-gray-200">{{ $ingredient->quantity }}</td>
+                                            <td class="py-2 px-4 border-b border-gray-200">{{ $ingredient->low_stock_alert_quantity }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
                        <div class="mt-4">
                         <a href="{{ route('admin.download.database') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Download Database

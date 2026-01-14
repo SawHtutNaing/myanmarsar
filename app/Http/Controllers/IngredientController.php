@@ -34,6 +34,7 @@ class IngredientController extends Controller
             'unit' => 'required|string|max:255',
             'quantity' => 'required|integer',
             'unit_price' => 'required|numeric',
+            'low_stock_alert_quantity' => 'nullable|numeric',
         ]);
 
         Ingredient::create($request->all());
@@ -68,6 +69,7 @@ class IngredientController extends Controller
             'unit' => 'required|string|max:255',
             'quantity' => 'required',
             'unit_price' => 'required|numeric',
+            'low_stock_alert_quantity' => 'nullable|numeric',
         ]);
 
         $ingredient = Ingredient::findOrFail($id);
