@@ -45,6 +45,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Unit Price
                                 </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Low Stock Alert
+                                </th>
                                 <th scope="col" class="relative px-6 py-3">
                                     <span class="sr-only">Edit</span>
                                 </th>
@@ -65,6 +68,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $ingredient->unit_price }}
                                     </td>
+<td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $ingredient->low_stock_alert_quantity }}
+                                    </td>
+
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                         <form action="{{ route('admin.ingredients.destroy', $ingredient->id) }}" method="POST" class="inline">
