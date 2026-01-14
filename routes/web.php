@@ -18,8 +18,8 @@ Route::get('/', function () {
 
 use App\Http\Controllers\Admin\IngredientImportController as AdminIngredientImportController;
 use App\Http\Controllers\ReportController;
-
 use App\Http\Controllers\IngredientImportController;
+use App\Http\Controllers\SupplierController;
 
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -45,10 +45,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
-Route::get('/', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
+    Route::get('/', [IngredientImportController::class, 'create'])->name('ingredients.import.create');
     Route::post('/ingredients/import', [IngredientImportController::class, 'store'])->name('ingredients.import.store');
-    Route::get('/reports/ingredient-imports', [ReportController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
-    Route::resource('expense_groups', ExpenseGroupController::class);
+    Route::get('/reports/ingredient-imports', [SupplierController::class, 'ingredientImportReport'])->name('reports.ingredient-imports');
+    Route::get('/ingredient-imports/{id}/edit', [SupplierController::class, 'editIngredientImport'])->name('ingredient-imports.edit');
+    Route::put('/ingredient-imports/{id}', [SupplierController::class, 'updateIngredientImport'])->name('ingredient-imports.update');
+    Route::delete('/ingredient-imports/{id}', [SupplierController::class, 'destroyIngredientImport'])->name('ingredient-imports.destroy');
+      Route::resource('expense_groups', ExpenseGroupController::class);
     Route::resource('expense_details', ExpenseDetailController::class);
 });
 
