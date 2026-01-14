@@ -47,7 +47,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::get('/time-check', function () {
     dd(
-       now()
+        'app_timezone' => config('app.timezone'),
+        'php_timezone' => date_default_timezone_get(),
+        'now()'        => now()->toDateTimeString(),
+        'now_iso'      => now()->toIso8601String(),
+        'now_utc'      => now()->utc()->toDateTimeString(),
     );
 });
 
