@@ -46,13 +46,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 
 Route::get('/time-check', function () {
-    dd(
+    dd([
         'app_timezone' => config('app.timezone'),
         'php_timezone' => date_default_timezone_get(),
         'now()'        => now()->toDateTimeString(),
         'now_iso'      => now()->toIso8601String(),
         'now_utc'      => now()->utc()->toDateTimeString(),
-    );
+    ]);
 });
 
 Route::middleware(['auth', 'role:supplier'])->prefix('supplier')->name('supplier.')->group(function () {
