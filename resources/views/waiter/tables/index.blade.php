@@ -52,7 +52,7 @@
                 <div class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                     <div class="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">သိမ်းပိုက်ထားသည်</p>
+                        <p class="font-semibold text-gray-900 text-sm">ယူထားသည်</p>
                         <p class="text-gray-600 text-xs">စားပွဲအသုံးပြုနေသည်</p>
                     </div>
                 </div>

@@ -11,7 +11,7 @@
     <label for="status" class="block text-sm font-medium text-gray-700">{{ __('အခြေအနေ') }}</label>
     <select name="status" id="status" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
         <option value="available" {{ old('status', $table->status ?? '') == 'available' ? 'selected' : '' }}>ရရှိနိုင်ပါသည်</option>
-        <option value="occupied" {{ old('status', $table->status ?? '') == 'occupied' ? 'selected' : '' }}>သိမ်းပိုက်ထားသည်</option>
+        <option value="occupied" {{ old('status', $table->status ?? '') == 'occupied' ? 'selected' : '' }}>ယူထားသည်</option>
     </select>
     @error('status')
         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
