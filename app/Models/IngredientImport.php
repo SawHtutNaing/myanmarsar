@@ -16,10 +16,12 @@ class IngredientImport extends Model
         'quantity',
         'unit_price',
         'date',
+        'time',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'time' => 'datetime:H:i',
     ];
 
     public function ingredient(): BelongsTo

@@ -36,6 +36,7 @@ class IngredientImportController extends Controller
             'quantity' => 'required|numeric|min:0',
             'unit_price' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'time' => 'nullable',
         ]);
 
         $originalQuantity = $ingredientImport->quantity;

@@ -22,6 +22,7 @@ class IngredientImportController extends Controller
             'quantity' => 'nullable',
             'unit_price' => 'nullable',
             'date' => 'nullable|date',
+            'time' => 'nullable',
         ]);
 
         IngredientImport::create($request->all());

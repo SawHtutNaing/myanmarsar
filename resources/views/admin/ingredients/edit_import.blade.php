@@ -39,6 +39,11 @@
                             <input type="date" name="date" id="date" value="{{ old('date', $ingredientImport->date->format('Y-m-d')) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
+                            <input type="time" name="time" id="time" value="{{ old('time', $ingredientImport->time ? $ingredientImport->time->format('H:i') : '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        </div>
+
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit" class="ml-4 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                                 {{ __('Update') }}
