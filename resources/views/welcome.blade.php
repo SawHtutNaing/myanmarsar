@@ -37,16 +37,16 @@
                                 <div class="space-x-4">
                                     @auth
                                         @if(Auth::user()->hasRole('admin'))
-                                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dashboard</a>
+                                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">ဒိုင်ခွက်</a>
                                         @elseif(Auth::user()->hasRole('waiter'))
-                                            <a href="{{ route('waiter.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dashboard</a>
+                                            <a href="{{ route('waiter.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">ဒိုင်ခွက်</a>
                                         @elseif(Auth::user()->hasRole('kitchen'))
-                                            <a href="{{ route('kitchen.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dashboard</a>
+                                            <a href="{{ route('kitchen.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">ဒိုင်ခွက်</a>
                                         @elseif(Auth::user()->hasRole('supplier'))
-                                            <a href="{{ route('supplier.ingredients.import.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Dashboard</a>
+                                            <a href="{{ route('supplier.ingredients.import.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">ဒိုင်ခွက်</a>
                                         @endif
                                     @else
-                                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Log in</a>
+                                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">လော့ဂ်အင်</a>
                                     @endauth
                                 </div>
                             @endif
@@ -60,14 +60,14 @@
                 <div class="max-w-3xl mx-auto">
                     <img src="{{ asset('logo.jpg') }}" alt="Company Logo" class="mx-auto h-24 sm:h-32 mb-6">
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-4">
-                        Welcome to Our Restaurant Management System
+                        ကျွန်ုပ်တို့၏ စားသောက်ဆိုင် စီမံခန့်ခွဲမှုစနစ်မှ ကြိုဆိုပါတယ်။
                     </h1>
                     <p class="text-lg sm:text-xl text-gray-600 mb-8">
-                        Streamline your operations, manage orders, track inventory, and boost your restaurant's efficiency.
+                        သင်၏လုပ်ငန်းဆောင်တာများကို ချောမွေ့စေခြင်း၊ အော်ဒါများကို စီမahaခန့်ခွဲခြင်း၊ ကုန်ပစ္စည်းคงคลังကို ခြေရာခံခြင်းနှင့် သင်၏စားသောက်ဆိုင်၏ စွမ်းဆောင်ရည်ကို မြှင့်တင်ပါ။
                     </p>
                     @if (!Auth::check())
                         <a href="{{ route('login') }}" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            Get Started
+                            စတင်လိုက်ပါ
                         </a>
                     @endif
                 </div>
@@ -76,31 +76,31 @@
             <!-- Optional: Features Section -->
             <section class="py-16 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">Key Features</h2>
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">အဓိကအင်္ဂါရပ်များ</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <!-- Feature 1 -->
                         <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
                             <div class="mb-4 text-indigo-500">
                                 <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Order Management</h3>
-                            <p class="text-gray-600">Efficiently take and track customer orders, assign to tables, and manage kitchen workflow.</p>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">အော်ဒါစီမံခန့်ခွဲမှု</h3>
+                            <p class="text-gray-600">ဖောက်သည်အော်ဒါများကို ထိရောက်စွာလက်ခံပြီး ခြေရာခံပါ၊ စားပွဲများသို့ သတ်မှတ်ပေးပြီး မီးဖိုချောင်လုပ်ငန်းစဉ်ကို စီမံခန့်ခွဲပါ။</p>
                         </div>
                         <!-- Feature 2 -->
                         <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
                             <div class="mb-4 text-green-500">
                                 <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Inventory Control</h3>
-                            <p class="text-gray-600">Keep track of your ingredients, prevent waste, and manage supplier imports seamlessly.</p>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">ကုန်ပစ္စည်းคงคลัง ထိန်းချုပ်ရေး</h3>
+                            <p class="text-gray-600">သင်၏ပါဝင်ပစ္စည်းများကို ခြေရာခံပါ၊ အလေအလွင့်မဖြစ်အောင် ကာကွယ်ပါ၊ နှင့် ပေးသွင်းသူသွင်းကုန်များကို ချောမွေ့စွာ စီမံခန့်ခွဲပါ။</p>
                         </div>
                         <!-- Feature 3 -->
                         <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
                             <div class="mb-4 text-red-500">
                                 <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Reporting & Analytics</h3>
-                            <p class="text-gray-600">Generate sales reports, profit/loss statements, and bill-out records for informed decisions.</p>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">အစီရင်ခံခြင်းနှင့် သုံးသပ်ခြင်း</h3>
+                            <p class="text-gray-600">အသိပေးဆုံးဖြတ်ချက်များအတွက် အရောင်းအစီရင်ခံစာများ၊ အမြတ်/အရှုံးရှင်းတမ်းများနှင့် ငွေတောင်းခံလွှာမှတ်တမ်းများကို ဖန်တီးပါ။</p>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
             <!-- Footer -->
             <footer class="bg-gray-800 text-white py-8">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
+                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. အခွင့်အရေးအားလုံး လက်ဝယ်ရှိသည်။</p>
                 </div>
             </footer>
         </div>

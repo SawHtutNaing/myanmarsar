@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Food Items') }}
+            {{ __('အစားအစာများ') }}
         </h2>
     </x-slot>
 
@@ -16,9 +16,9 @@
                     @endif
 
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Food Items List</h3>
+                        <h3 class="text-lg font-bold">အစားအစာစာရင်း</h3>
                         <a href="{{ route('admin.fooditems.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Add Food Item
+                            အစားအစာထည့်ပါ။
                         </a>
                     </div>
 
@@ -26,14 +26,14 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Name
+                                    အမည်
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Price
+                                    စျေးနှုန်း
                                 </th>
 
                                 <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
+                                    <span class="sr-only">တည်းဖြတ်ရန်</span>
                                 </th>
                             </tr>
                         </thead>
@@ -48,11 +48,11 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.fooditems.edit', $fooditem->id) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <a href="{{ route('admin.fooditems.edit', $fooditem->id) }}" class="text-indigo-600 hover:text-indigo-900">တည်းဖြတ်ရန်</a>
                                         <form action="{{ route('admin.fooditems.destroy', $fooditem->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">ဖျက်ပစ်ပါ</button>
                                         </form>
                                     </td>
                                 </tr>

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Table ' . $table->table_number . ' Records') }}
+            {{ __('စားပွဲ ' . $table->table_number . ' မှတ်တမ်းများ') }}
         </h2>
     </x-slot>
 
@@ -13,15 +13,15 @@
                         @if($table->status == 'available') bg-green-200
                         @elseif($table->status == 'occupied') bg-red-200
                         @else bg-yellow-200 @endif">
-                        <p class="text-2xl font-bold">Table {{ $table->table_number }}</p>
+                        <p class="text-2xl font-bold">စားပွဲ {{ $table->table_number }}</p>
                         <p id="table-status-text">{{ ucfirst($table->status) }}</p>
                     </div>
-                    <h3 class="text-lg font-bold mb-4">Active Orders</h3>
+                    <h3 class="text-lg font-bold mb-4">လက်ရှိအော်ဒါများ</h3>
                     <div id="active-orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                         {{-- Active orders will be loaded here via polling --}}
                     </div>
 
-                    <h3 class="text-lg font-bold mb-4">Served Orders</h3>
+                    <h3 class="text-lg font-bold mb-4">ဝန်ဆောင်မှုပေးပြီးသော အော်ဒါများ</h3>
                     <div id="past-orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {{-- Past orders will be loaded here via polling --}}
                     </div>
@@ -44,7 +44,7 @@
         )
     >
         <i class="fas fa-sync-alt"></i>
-        Toggle Status
+        အခြေအနေပြောင်းလဲရန်
     </button>
 
     @if(
@@ -55,7 +55,7 @@
     )
         <small class="flex items-center gap-1 text-sm text-gray-500">
             <i class="fas fa-info-circle"></i>
-            Cannot change status – pending orders exist
+            ဆိုင်းငံ့အော်ဒါများ ရှိနေသောကြောင့် အခြေအနေကို ပြောင်းလဲ၍မရပါ။
         </small>
     @endif
 </div>
@@ -169,7 +169,7 @@
 
                             orderCard.innerHTML = `
                                 <div class="flex justify-between items-center mb-2">
-                                    <h4 class="font-bold text-lg">Order #${order.id}</h4>
+                                    <h4 class="font-bold text-lg">အော်ဒါ #${order.id}</h4>
                                     <span class="text-sm font-semibold px-2 py-1 rounded-full
                                         ${order.status === 'pending' ? 'bg-yellow-500 text-white' :
                                           order.status === 'preparing' ? 'bg-orange-500 text-white' :
@@ -179,7 +179,7 @@
                                     </span>
                                 </div>
                                 ${itemsHtml}
-                                <p class="text-right font-bold mt-3">Total: $${formattedTotal}</p>
+                                <p class="text-right font-bold mt-3">စုစုပေါင်း: $${formattedTotal}</p>
                             `;
 
                             if (isActiveOrder) {

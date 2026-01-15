@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Place Order') }}
+            {{ __('အော်ဒါတင်ပါ။') }}
         </h2>
     </x-slot>
 
@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                @if ($errors->any())
                         <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <strong class="font-bold">Oops! Something went wrong:</strong>
+                            <strong class="font-bold">အမှားတစ်ခုခု ဖြစ်သွားပါပြီ။</strong>
                             <ul class="mt-2 list-disc list-inside">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -23,7 +23,7 @@
                         @csrf
                         <input type="hidden" name="table_number" value="{{ $table_number ?? '' }}">
                         <div class="mb-4">
-                            <h3 class="text-lg font-bold mb-2">Menu for Table {{ $table_number ?? 'Unknown' }}</h3>
+                            <h3 class="text-lg font-bold mb-2">စားပွဲအတွက် မီနူး {{ $table_number ?? 'မသိ' }}</h3>
                             @foreach ($fooditems as $fooditem)
                                 <div class="flex items-center justify-between mb-4 p-4 border rounded-lg">
                                     <div class="flex-grow">
@@ -40,15 +40,15 @@
                             @endforeach
                         </div>
                         <div class="mb-4">
-                            <label for="remark" class="block text-gray-700 text-sm font-bold mb-2">Remark:</label>
+                            <label for="remark" class="block text-gray-700 text-sm font-bold mb-2">မှတ်ချက်:</label>
                             <textarea name="remark" id="remark" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                         </div>
                         <div class="mb-4">
-                            <h3 class="text-lg font-bold">Total: <span id="total_price">$0.00</span></h3>
+                            <h3 class="text-lg font-bold">စုစုပေါင်း: <span id="total_price">$0.00</span></h3>
                         </div>
                         <div>
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Place Order
+                                အော်ဒါတင်ပါ။
                             </button>
                         </div>
                     </form>

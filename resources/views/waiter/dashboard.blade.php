@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Waiter Dashboard') }}
+            {{ __('စားပွဲထိုး ဒိုင်ခွက်') }}
         </h2>
     </x-slot>
 
@@ -15,19 +15,19 @@
                         </div>
                     @endif
 
-                    <h3 class="text-lg font-bold mb-4">Waiter Dashboard</h3>
+                    <h3 class="text-lg font-bold mb-4">စားပွဲထိုး ဒိုင်ခွက်</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <a href="{{ route('waiter.menu') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            View Menu
+                            မီနူးကို ကြည့်ရှုပါ။
                         </a>
                         <a href="{{ route('waiter.orders.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Place Order
+                            အော်ဒါတင်ပါ။
                         </a>
                         <a href="{{ route('waiter.my-orders') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            My Orders
+                            ကျွန်ုပ်၏ အော်ဒါများ
                         </a>
                         <a href="{{ route('waiter.tables.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Tables
+                            စားပွဲများ
                         </a>
                     </div>
                 </div>

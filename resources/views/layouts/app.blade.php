@@ -76,14 +76,14 @@
 
                 <x-slot name="content">
                     <x-dropdown-link href="/profile">
-                        Profile
+                        ပရိုဖိုင်
                     </x-dropdown-link>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <x-dropdown-link href="#"
                             onclick="event.preventDefault(); this.closest('form').submit();">
-                            Log Out
+                            ထွက်ရန်
                         </x-dropdown-link>
                     </form>
                 </x-slot>

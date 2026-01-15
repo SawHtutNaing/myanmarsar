@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-2xl text-gray-900">{{ __('Tables') }}</h2>
-            <span class="text-sm text-gray-500">{{ count($tables) }} Tables</span>
+            <h2 class="font-semibold text-2xl text-gray-900">{{ __('စားပွဲများ') }}</h2>
+            <span class="text-sm text-gray-500">{{ count($tables) }} စားပွဲများ</span>
         </div>
     </x-slot>
 
@@ -36,8 +36,8 @@
             @endif
             <!-- Header Section -->
             <div class="mb-8">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Table Management</h3>
-                <p class="text-gray-600 text-sm">Manage table orders and status</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">စားပွဲစီမံခန့်ခွဲမှု</h3>
+                <p class="text-gray-600 text-sm">စားပွဲအော်ဒါများနှင့် အခြေအနေကို စီမံခန့်ခွဲပါ။</p>
             </div>
 
             <!-- Status Legend -->
@@ -45,22 +45,22 @@
                 <div class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                     <div class="w-4 h-4 bg-green-500 rounded-full"></div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">Available</p>
-                        <p class="text-gray-600 text-xs">Ready for order</p>
+                        <p class="font-semibold text-gray-900 text-sm">ရရှိနိုင်ပါသည်</p>
+                        <p class="text-gray-600 text-xs">အော်ဒါမှာယူရန် အသင့်ရှိပါသည်</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                     <div class="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">Occupied</p>
-                        <p class="text-gray-600 text-xs">Table in use</p>
+                        <p class="font-semibold text-gray-900 text-sm">သိမ်းပိုက်ထားသည်</p>
+                        <p class="text-gray-600 text-xs">စားပွဲအသုံးပြုနေသည်</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                     <div class="w-4 h-4 bg-amber-500 rounded-full"></div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">Reserved</p>
-                        <p class="text-gray-600 text-xs">Other status</p>
+                        <p class="font-semibold text-gray-900 text-sm">ကြိုတင်မှာယူထားသည်</p>
+                        <p class="text-gray-600 text-xs">အခြားအခြေအနေ</p>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                                 <!-- Table Number -->
                                 <div class="mb-3 sm:mb-4">
                                     <p class="text-3xl sm:text-4xl font-bold text-gray-900">{{ $table->table_number }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Table</p>
+                                    <p class="text-xs text-gray-500 mt-1">စားပွဲ</p>
                                 </div>
 
                                 <!-- Status Badge -->
@@ -116,21 +116,21 @@
                                     @if($table->status == 'available')
                                         <a href="{{ route('waiter.orders.create') }}?table_number={{ $table->table_number }}"
                                             class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200">
-                                            Place Order
+                                            အော်ဒါတင်ပါ။
                                         </a>
                                     @endif
 
                                     @if($table->status == 'occupied')
                                         <a href="{{ route('waiter.orders.add-to-current') }}?table_number={{ $table->table_number }}"
                                             class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200">
-                                            Add Order
+                                            အော်ဒါထည့်ပါ။
                                         </a>
                                         @if($table->orders->isNotEmpty())
                                             @php
                                                 $latestOrder = $table->orders->first();
                                             @endphp
                                             <div id="latest-order-summary-{{ $table->id }}" class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 text-blue-800 text-xs rounded-r">
-                                                <p class="font-bold">Latest Order #{{ $latestOrder->id }} ({{ ucfirst($latestOrder->status) }})</p>
+                                                <p class="font-bold">နောက်ဆုံးအော်ဒါ #{{ $latestOrder->id }} ({{ ucfirst($latestOrder->status) }})</p>
                                                 <ul class="list-disc list-inside mt-1">
                                                     @foreach($latestOrder->orderItems as $item)
                                                         <li>{{ $item->quantity }}x {{ $item->foodItem->name }}</li>
@@ -140,7 +140,7 @@
                                                     <form action="{{ route('waiter.orders.take-all', $latestOrder->id) }}" method="POST" class="mt-2">
                                                         @csrf
                                                         <button type="submit" class="w-full px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200">
-                                                            Take All
+                                                            အားလုံးယူပါ
                                                         </button>
                                                     </form>
                                                 @endif
@@ -150,7 +150,7 @@
 
                                     <a href="{{ route('waiter.tables.show', $table->id) }}"
                                         class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                        View Orders
+                                        အော်ဒါများကို ကြည့်ရှုပါ။
                                     </a>
                                 </div>
                             </div>
@@ -163,8 +163,8 @@
             @if(count($tables) == 0)
                 <div class="flex flex-col items-center justify-center py-12">
                     <div class="text-center">
-                        <p class="text-gray-500 text-lg font-medium">No tables available</p>
-                        <p class="text-gray-400 text-sm mt-2">Please configure tables first</p>
+                        <p class="text-gray-500 text-lg font-medium">စားပွဲများ မရှိသေးပါ</p>
+                        <p class="text-gray-400 text-sm mt-2">ကျေးဇူးပြု၍ စားပွဲများကို ဦးစွာ သတ်မှတ်ပါ။</p>
                     </div>
                 </div>
             @endif
@@ -340,14 +340,14 @@
                                 actionsHtml += `
                                     <a href="/waiter/orders/create?table_number=${table.table_number}"
                                         class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200">
-                                        Place Order
+                                        အော်ဒါတင်ပါ။
                                     </a>
                                 `;
                             } else if (newStatus === 'occupied') {
                                 actionsHtml += `
                                     <a href="/waiter/orders/add-to-current?table_number=${table.table_number}"
                                         class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200">
-                                        Add Order
+                                        အော်ဒါထည့်ပါ။
                                     </a>
                                 `;
                                 if (table.latest_order) {
@@ -360,7 +360,7 @@
 
                                     actionsHtml += `
                                         <div id="latest-order-summary-${table.id}" class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 text-blue-800 text-xs rounded-r">
-                                            <p class="font-bold">Latest Order #${table.latest_order.id} (${ucfirst(table.latest_order.status)})</p>
+                                            <p class="font-bold">နောက်ဆုံးအော်ဒါ #${table.latest_order.id} (${ucfirst(table.latest_order.status)})</p>
                                             <ul class="list-disc list-inside mt-1">
                                                 ${orderItemsHtml}
                                             </ul>
@@ -371,7 +371,7 @@
                                             <form action="/waiter/orders/${table.latest_order.id}/take-all" method="POST" class="mt-2">
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 <button type="submit" class="w-full px-3 py-2 text-xs sm:text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200">
-                                                    Take All
+                                                    အားလုံးယူပါ
                                                 </button>
                                             </form>
                                         `;
@@ -385,7 +385,7 @@
                             actionsHtml += `
                                 <a href="/waiter/tables/${table.id}"
                                     class="block w-full text-center px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                    View Orders
+                                    အော်ဒါများကို ကြည့်ရှုပါ။
                                 </a>
                             `;
                             if (tableActionsDiv) {

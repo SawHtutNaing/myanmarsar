@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Users') }}
+            {{ __('အသုံးပြုသူများ') }}
         </h2>
     </x-slot>
 
@@ -10,9 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Users List</h3>
+                        <h3 class="text-lg font-bold">အသုံးပြုသူစာရင်း</h3>
                         <a href="{{ route('admin.users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Add User
+                            အသုံးပြုသူထည့်ပါ။
                         </a>
                     </div>
 
@@ -20,16 +20,16 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Name
+                                    အမည်
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Email
+                                    အီးမေးလ်
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Roles
+                                    အခန်းကဏ္ဍများ
                                 </th>
                                 <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
+                                    <span class="sr-only">တည်းဖြတ်ရန်</span>
                                 </th>
                             </tr>
                         </thead>
@@ -46,11 +46,11 @@
                                         {{ implode(', ', $user->roles->pluck('name')->toArray()) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900">တည်းဖြတ်ရန်</a>
                                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">ဖျက်ပစ်ပါ</button>
                                         </form>
                                     </td>
                                 </tr>

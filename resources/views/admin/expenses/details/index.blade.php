@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Expense Details') }}
+            {{ __('ကုန်ကျစရိတ်အသေးစိတ်') }}
         </h2>
     </x-slot>
 
@@ -21,9 +21,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Manage Expense Details</h3>
+                        <h3 class="text-lg font-bold">ကုန်ကျစရိတ်အသေးစိတ်များကို စီမံခန့်ခွဲပါ။</h3>
                         <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.create') : route('admin.expense_details.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Add New Expense
+                            ကုန်ကျစရိတ်အသစ်ထည့်ပါ။
                         </a>
                     </div>
 
@@ -32,22 +32,22 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        ID
+                                        အမှတ်စဉ်
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Group
+                                        အုပ်စု
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Title
+                                        ခေါင်းစဉ်
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date
+                                        ရက်စွဲ
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Amount
+                                        ပမာဏ
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
+                                        လုပ်ဆောင်ချက်များ
                                     </th>
                                 </tr>
                             </thead>
@@ -60,11 +60,11 @@
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $expense->date->format('Y-m-d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">${{ number_format($expense->amount, 2) }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.edit', $expense->id) : route('admin.expense_details.edit', $expense->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                            <form action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.destroy', $expense->id) : route('admin.expense_details.destroy', $expense->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this expense detail?');">
+                                            <a href="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.edit', $expense->id) : route('admin.expense_details.edit', $expense->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">တည်းဖြတ်ရန်</a>
+                                            <form action="{{ auth()->user()->hasRole('supplier') ? route('supplier.expense_details.destroy', $expense->id) : route('admin.expense_details.destroy', $expense->id) }}" method="POST" class="inline-block" onsubmit="return confirm('ဤကုန်ကျစရိတ်အသေးစိတ်ကို ဖျက်ပစ်ရန် သေချာပါသလား။');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                <button type="submit" class="text-red-600 hover:text-red-900">ဖျက်ပစ်ပါ</button>
                                             </form>
                                         </td>
                                     </tr>

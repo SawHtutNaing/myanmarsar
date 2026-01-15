@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Order Management') }}
+            {{ __('အော်ဒါစီမံခန့်ခွဲမှု') }}
         </h2>
     </x-slot>
 
@@ -9,33 +9,33 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    {{ session('success') }}
+                    <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
             @endif
             @if (session('error'))
                 <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    {{ session('error') }}
+                    <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-bold mb-4">All Orders</h3>
+                    <h3 class="text-lg font-bold mb-4">အော်ဒါအားလုံး</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Order Details
+                                        အော်ဒါအသေးစိတ်
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Total Price
+                                        စုစုပေါင်းစျေးနှုန်း
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Order Status
+                                        အော်ဒါအခြေအနေ
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
+                                        လုပ်ဆောင်ချက်များ
                                     </th>
                                 </tr>
                             </thead>
@@ -44,17 +44,17 @@
                                     <tr class="bg-gray-100">
                                         <td colspan="4" class="px-6 py-4 whitespace-nowrap text-lg font-semibold flex justify-between items-center">
                                             <span>
-                                                Order #{{ $order->id }} (Table: {{ $order->table->table_number ?? 'N/A' }}, Waiter: {{ $order->user->name ?? 'Guest' }})
+                                                အော်ဒါ #{{ $order->id }} (စားပွဲ: {{ $order->table->table_number ?? 'N/A' }}, စားပွဲထိုး: {{ $order->user->name ?? 'ဧည့်သည်' }})
                                                 @if ($order->remark)
-                                                    <p class="text-sm text-gray-500">Remark: {{ $order->remark }}</p>
+                                                    <p class="text-sm text-gray-500">မှတ်ချက်: {{ $order->remark }}</p>
                                                 @endif
                                             </span>
                                             @if ($order->status !== 'cancelled' && $order->status !== 'completed')
-                                                <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this entire invoice? This will restock all ingredients for this order.');">
+                                                <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('ဤဘေလ်တစ်ခုလုံးကို ဖျက်သိမ်းရန် သေချာပါသလား။ ၎င်းသည် ဤအော်ဒါအတွက် ပါဝင်ပစ္စည်းများအားလုံးကို ပြန်လည်ဖြည့်တင်းပါမည်။');">
                                                     @csrf
                                                     @method('PATCH')
                                                     <x-danger-button>
-                                                        Cancel Invoice
+                                                        ဘေလ်ကို ဖျက်ပါ။
                                                     </x-danger-button>
                                                 </form>
                                             @endif
@@ -73,11 +73,11 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 @if ($orderItem->status == 'pending')
-                                                    <form action="{{ route('admin.order_items.cancel', $orderItem->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this item? This will restock ingredients.');">
+                                                    <form action="{{ route('admin.order_items.cancel', $orderItem->id) }}" method="POST" onsubmit="return confirm('ဤပစ္စည်းကို ဖျက်သိမ်းရန် သေချာပါသလား။ ၎င်းသည် ပါဝင်ပစ္စည်းများကို ပြန်လည်ဖြည့်တင်းပါမည်။');">
                                                         @csrf
                                                         @method('PATCH')
                                                         <x-danger-button>
-                                                            Cancel Item
+                                                            ပစ္စည်းကို ဖျက်ပါ။
                                                         </x-danger-button>
                                                     </form>
                                                 @else

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Order History') }}
+            {{ __('အော်ဒါမှတ်တမ်း') }}
         </h2>
     </x-slot>
 
@@ -11,28 +11,28 @@
                 <div class="p-6 text-gray-900">
                     <!-- Date Filter Section -->
                     <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-                        <h4 class="text-md font-semibold mb-3">Filter Orders by Date</h4>
+                        <h4 class="text-md font-semibold mb-3">ရက်စွဲအလိုက် အော်ဒါများကို စစ်ထုတ်ပါ။</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                                <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">ရက်စွဲမှ</label>
                                 <input type="date" id="date_from" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                                <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">ရက်စွဲအထိ</label>
                                 <input type="date" id="date_to" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div class="flex items-end gap-2">
                                 <button id="apply_filter" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                    Apply Filter
+                                    စစ်ထုတ်ပါ။
                                 </button>
                                 <button id="reset_filter" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                                    Reset
+                                    ပြန်လည်စတင်ပါ
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <h3 class="text-lg font-bold mb-4">My Order History</h3>
+                    <h3 class="text-lg font-bold mb-4">ကျွန်ုပ်၏ အော်ဒါမှတ်တမ်း</h3>
                     <div id="order-history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {{-- Orders will be loaded here --}}
                     </div>
@@ -93,12 +93,12 @@
                 const formattedDate = orderDate.toLocaleString();
 
                 orderCard.innerHTML = `
-                    <h4 class="font-bold text-lg mb-2">Order #${order.id}</h4>
+                    <h4 class="font-bold text-lg mb-2">အော်ဒါ #${order.id}</h4>
                     <p class="text-xs text-gray-500 mb-2">${formattedDate}</p>
-                    <p class="text-md font-semibold mb-1">Table #${order.table_number}</p>
-                    <p class="text-sm mb-4">Status: <span class="${statusColor} font-semibold">${order.status}</span></p>
+                    <p class="text-md font-semibold mb-1">စားပွဲ #${order.table_number}</p>
+                    <p class="text-sm mb-4">အခြေအနေ: <span class="${statusColor} font-semibold">${order.status}</span></p>
                     ${itemsHtml}
-                    <p class="mt-4 text-base font-semibold">Total: $${formattedTotal}</p>
+                    <p class="mt-4 text-base font-semibold">စုစုပေါင်း: $${formattedTotal}</p>
                 `;
                 return orderCard;
             }
@@ -123,7 +123,7 @@
                         orders.sort((a, b) => b.id - a.id); // Sort by ID descending
 
                         if (orders.length === 0) {
-                            ordersList.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-full">No completed orders found for the selected date range.</p>';
+                            ordersList.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-full">ရွေးချယ်ထားသော ရက်စွဲအပိုင်းအခြားအတွက် ပြီးစီးသောအော်ဒါများ မတွေ့ပါ။</p>';
                         } else {
                             orders.forEach(order => {
                                 const orderCard = createOrderCard(order);

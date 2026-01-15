@@ -20,72 +20,72 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if(Auth::user()->hasRole('admin'))
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                            {{ __('Dashboard') }}
+                            {{ __('ဒိုင်ခွက်') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.ingredients.index')" :active="request()->routeIs('admin.ingredients.index')">
-                            {{ __('Ingredients') }}
+                            {{ __('ပါဝင်ပစ္စည်းများ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.fooditems.index')" :active="request()->routeIs('admin.fooditems.index')">
-                            {{ __('Food Items') }}
+                            {{ __('အစားအစာများ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
-                            {{ __('Users') }}
+                            {{ __('အသုံးပြုသူများ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
-                            {{ __('Tables') }}
+                            {{ __('စားပွဲများ') }}
                         </x-nav-link>
 
 
                         <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')">
-                            {{ __('Orders') }}
+                            {{ __('အော်ဒါများ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.reports.table_bill_outs.index')" :active="request()->routeIs('admin.reports.table_bill_outs.index')">
-                            {{ __('Table Bil') }}
+                            {{ __('စားပွဲဘေလ်') }}
                         </x-nav-link>
 
 
 
                         <x-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
-                            {{ __('Sales Report') }}
+                            {{ __('အရောင်းအစီရင်ခံစာ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')">
-                            {{ __('Profit & Loss') }}
+                            {{ __('အမြတ်နှင့်အရှုံး') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('admin.reports.ingredient-imports')">
-                            {{ __('Ingredient Imports') }}
+                            {{ __('ပါဝင်ပစ္စည်း တင်သွင်းမှုများ') }}
                         </x-nav-link>
                         @elseif(Auth::user()->hasRole('supplier'))
 
 <x-nav-link :href="route('supplier.ingredients.import.create')" :active="request()->routeIs('supplier.ingredients.import.create')">
-                            {{ __('Ingredient Import') }}
+                            {{ __('ပါဝင်ပစ္စည်း တင်သွင်းခြင်း') }}
                         </x-nav-link>
 <x-nav-link :href="route('supplier.reports.ingredient-imports')" :active="request()->routeIs('supplier.reports.ingredient-imports')">
-                            {{ __('Ingredient Imports') }}
+                            {{ __('ပါဝင်ပစ္စည်း တင်သွင်းမှုများ') }}
                         </x-nav-link>
 
 
                     @elseif(Auth::user()->hasRole('waiter'))
                         <x-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
-                            {{ __('Dashboard') }}
+                            {{ __('ဒိုင်ခွက်') }}
                         </x-nav-link>
                         <x-nav-link :href="route('waiter.menu')" :active="request()->routeIs('waiter.menu')">
-                            {{ __('Menu') }}
+                            {{ __('မီနူး') }}
                         </x-nav-link>
                         {{-- <x-nav-link :href="route('waiter.orders.create')" :active="request()->routeIs('waiter.orders.create')">
                             {{ __('Place Order') }}
                         </x-nav-link> --}}
                         <x-nav-link :href="route('waiter.my-orders')" :active="request()->routeIs('waiter.my-orders')">
-                            {{ __('My Orders') }}
+                            {{ __('ကျွန်ုပ်၏ အော်ဒါများ') }}
                         </x-nav-link>
                         <x-nav-link :href="route('waiter.tables.index')" :active="request()->routeIs('waiter.tables.index')">
-                            {{ __('Tables') }}
+                            {{ __('စားပွဲများ') }}
                         </x-nav-link>
                     @elseif(Auth::user()->hasRole('kitchen'))
                         <x-nav-link :href="route('kitchen.dashboard')" :active="request()->routeIs('kitchen.dashboard')">
-                            {{ __('Dashboard') }}
+                            {{ __('ဒိုင်ခွက်') }}
                         </x-nav-link>
                         <x-nav-link :href="route('kitchen.orders')" :active="request()->routeIs('kitchen.orders')">
-                            {{ __('Orders') }}
+                            {{ __('အော်ဒါများ') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -108,7 +108,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link href="/profile">
-                            {{ __('Profile') }}
+                            {{ __('ပရိုဖိုင်') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -118,7 +118,7 @@
                             <x-dropdown-link href="#"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('ထွက်ရန်') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -142,36 +142,36 @@
         <div class="pt-2 pb-3 space-y-1">
             @if(Auth::user()->hasRole('admin'))
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                    {{ __('Dashboard') }}
+                    {{ __('ဒိုင်ခွက်') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.ingredients.index')" :active="request()->routeIs('admin.ingredients.index')">
-                    {{ __('Ingredients') }}
+                    {{ __('ပါဝင်ပစ္စည်းများ') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.fooditems.index')" :active="request()->routeIs('admin.fooditems.index')">
-                    {{ __('Food Items') }}
+                    {{ __('အစားအစာများ') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
-                    {{ __('Users') }}
+                    {{ __('အသုံးပြုသူများ') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
-                    {{ __('Tables') }}
+                    {{ __('စားပွဲများ') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
-                    {{ __('Sales Report') }}
+                    {{ __('အရောင်းအစီရင်ခံစာ') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')">
-                    {{ __('Profit & Loss') }}
+                    {{ __('အမြတ်နှင့်အရှုံး') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('admin.reports.ingredient-imports')">
-                    {{ __('Ingredient Imports') }}
+                    {{ __('ပါဝင်ပစ္စည်း တင်သွင်းမှုများ') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->hasRole('waiter'))
                 <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
-                    {{ __('Dashboard') }}
+                    {{ __('ဒိုင်ခွက်') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->hasRole('kitchen'))
                 <x-responsive-nav-link :href="route('kitchen.dashboard')" :active="request()->routeIs('kitchen.dashboard')">
-                    {{ __('Dashboard') }}
+                    {{ __('ဒိုင်ခွက်') }}
                 </x-responsive-nav-link>
             @endif
         </div>
@@ -185,7 +185,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link href="#">
-                    {{ __('Profile') }}
+                    {{ __('ပရိုဖိုင်') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -195,11 +195,10 @@
                     <x-responsive-nav-link href="#"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('ထွက်ရန်') }}
                     </x-responsive-nav-link>
                 </form>
             </div>
         </div>
     </div>
 </nav>
-

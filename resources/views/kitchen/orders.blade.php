@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Orders') }}
+            {{ __('အော်ဒါများ') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -13,7 +13,7 @@
                             <span class="block sm:inline">{{ session('success') }}</span>
                         </div>
                     @endif
-                    <h3 class="text-lg font-bold mb-4">Incoming Orders</h3>
+                    <h3 class="text-lg font-bold mb-4">ဝင်လာသော အော်ဒါများ</h3>
                     <div id="orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {{-- Orders will be loaded here via polling --}}
                     </div>
@@ -94,7 +94,7 @@
                                         <form action="{{ route('kitchen.orders.complete-item', ['orderItemId' => 'ITEM_ID']) }}" method="POST" class="inline-block ml-2" data-item-id="${item.id}">
                                             @csrf
                                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded">
-                                                Mark as Cooked
+                                                ချက်ပြုတ်ပြီးအဖြစ် မှတ်သားပါ
                                             </button>
                                         </form>
                                     ` : ''}
@@ -108,7 +108,7 @@
 
                             orderCard.innerHTML = `
                                 <div class="flex justify-between items-center mb-2">
-                                    <h4 class="font-bold text-lg">Order #${order.id}</h4>
+                                    <h4 class="font-bold text-lg">အော်ဒါ #${order.id}</h4>
                                     <span class="text-sm font-semibold px-2 py-1 rounded-full
                                         ${order.status === 'pending' ? 'bg-yellow-500 text-white' :
                                           order.status === 'preparing' ? 'bg-orange-500 text-white' :
@@ -117,17 +117,17 @@
                                         ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                     </span>
                                 </div>
-                                <p class="text-gray-600 mb-2">Table: ${order.table_number}</p>
+                                <p class="text-gray-600 mb-2">စားပွဲ: ${order.table_number}</p>
 
-                                ${order.remark ? `<p class="text-gray-700 mb-2">Remark: ${order.remark}</p>` : ''}
-                                ${order.updated_human ? `<p class="text-gray-700 mb-2">Order At ${order.updated_human}</p>` : ''}
-                                ${order.user ? `<p class="text-gray-700 mb-2">Waiter: ${order.user.name}</p>` : ''}
+                                ${order.remark ? `<p class="text-gray-700 mb-2">မှတ်ချက်: ${order.remark}</p>` : ''}
+                                ${order.updated_human ? `<p class="text-gray-700 mb-2">မှာယူသည့်အချိန် ${order.updated_human}</p>` : ''}
+                                ${order.user ? `<p class="text-gray-700 mb-2">စားပွဲထိုး: ${order.user.name}</p>` : ''}
                                 ${itemsHtml}
-                                <p class="text-right font-bold mt-3">Total: $${formattedTotal}</p>
+                                <p class="text-right font-bold mt-3">စုစုပေါင်း: $${formattedTotal}</p>
                                 <form action="{{ route('kitchen.orders.complete-order', ['orderId' => 'ORDER_ID']) }}" method="POST" class="mt-4" data-order-id="${order.id}">
                                     @csrf
                                     <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
-                                        Mark Entire Order as Cooked
+                                        အော်ဒါတစ်ခုလုံးကို ချက်ပြုတ်ပြီးအဖြစ် မှတ်သားပါ
                                     </button>
                                 </form>
                             `;

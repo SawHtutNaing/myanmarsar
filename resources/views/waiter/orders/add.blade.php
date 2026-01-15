@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add to Current Order') }}
+            {{ __('လက်ရှိအော်ဒါထဲသို့ ထည့်ပါ။') }}
         </h2>
     </x-slot>
 
@@ -12,7 +12,7 @@
                     <!-- Display Validation Errors -->
                     @if ($errors->any())
                         <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <strong class="font-bold">Oops! Something went wrong:</strong>
+                            <strong class="font-bold">အမှားတစ်ခုခု ဖြစ်သွားပါပြီ။</strong>
                             <ul class="mt-2 list-disc list-inside">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -21,22 +21,22 @@
                         </div>
                     @endif
 
-                    <h3 class="text-lg font-bold mb-4">Current Order #{{ $currentOrder->id }} for Table {{ $table_number }}</h3>
+                    <h3 class="text-lg font-bold mb-4">လက်ရှိအော်ဒါ #{{ $currentOrder->id }} စားပွဲ {{ $table_number }}အတွက်</h3>
                     <div class="mb-6">
-                        <h4 class="text-md font-semibold mb-2">Current Items:</h4>
+                        <h4 class="text-md font-semibold mb-2">လက်ရှိပစ္စည်းများ:</h4>
                         <ul class="list-disc pl-5">
                             @foreach ($currentItems as $item)
                                 <li>{{ $item->quantity }} x {{ $item->foodItem->name }} - ${{ number_format($item->price, 2) }}</li>
                             @endforeach
                         </ul>
-                        <p class="mt-2 font-bold">Current Total: ${{ number_format($currentOrder->total_price, 2) }}</p>
+                        <p class="mt-2 font-bold">လက်ရှိစုစုပေါင်း: ${{ number_format($currentOrder->total_price, 2) }}</p>
                     </div>
 
                     <form action="{{ route('waiter.orders.add-items', $currentOrder->id) }}" method="POST">
                         @csrf
                         <input type="hidden" name="table_number" value="{{ $table_number }}">
                         <div class="mb-4">
-                            <h3 class="text-lg font-bold mb-2">Add More Items</h3>
+                            <h3 class="text-lg font-bold mb-2">ပစ္စည်းများ ထပ်ထည့်ပါ။</h3>
                             @foreach ($fooditems as $fooditem)
                                 <div class="flex items-center justify-between mb-4 p-4 border rounded-lg">
                                     <div class="flex-grow">
@@ -44,7 +44,7 @@
                                         <p class="text-sm text-gray-600">{{ $fooditem->description }}</p>
                                         <p class="text-sm font-semibold text-green-600">${{ number_format($fooditem->price, 2) }}</p>
                                         @if (isset($currentItems[$fooditem->id]))
-                                            <p class="text-sm text-gray-500">Current: {{ $currentItems[$fooditem->id]->quantity }} x</p>
+                                            <p class="text-sm text-gray-500">လက်ရှိ: {{ $currentItems[$fooditem->id]->quantity }} x</p>
                                         @endif
                                     </div>
                                     <div class="flex items-center">
@@ -56,14 +56,14 @@
                             @endforeach
                         </div>
                         <div class="mb-4">
-                            <h3 class="text-lg font-bold">Additional Total: <span id="total_price">$0.00</span></h3>
+                            <h3 class="text-lg font-bold">ထပ်တိုးစုစုပေါင်း: <span id="total_price">$0.00</span></h3>
                         </div>
                         <div>
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Add Items
+                                ပစ္စည်းများ ထည့်ပါ။
                             </button>
                             <a href="{{ route('waiter.tables.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2">
-                                Cancel
+                                ဖျက်သိမ်းမည်
                             </a>
                         </div>
                     </form>

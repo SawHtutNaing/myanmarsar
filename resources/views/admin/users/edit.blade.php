@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit User') }}
+            {{ __('အသုံးပြုသူကို တည်းဖြတ်ပါ။') }}
         </h2>
     </x-slot>
 
@@ -15,7 +15,7 @@
                         @include('admin.users._form', ['user' => $user, 'roles' => $roles])
                         <div>
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                {{ __('Update User') }}
+                                {{ __('အသုံးပြုသူကို အပ်ဒိတ်လုပ်ပါ။') }}
                             </button>
                         </div>
                     </form>

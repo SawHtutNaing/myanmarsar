@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ingredients') }}
+            {{ __('ပါဝင်ပစ္စည်းများ') }}
         </h2>
     </x-slot>
 
@@ -16,15 +16,15 @@
                     @endif
 
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Ingredients List</h3>
+                        <h3 class="text-lg font-bold">ပါဝင်ပစ္စည်းစာရင်း</h3>
                         <div>
                             <a href="{{ route('admin.ingredients.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Add Ingredient
+                                ပါဝင်ပစ္စည်းထည့်ပါ။
                             </a>
 
                           @if(auth()->user()->hasRole('supplier'))
   <a href="{{ route('supplier.ingredients.import.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4">
-                                Import Ingredients
+                                ပါဝင်ပစ္စည်းများ တင်သွင်းပါ။
                             </a>
                           @endif
                         </div>
@@ -34,22 +34,22 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Name
+                                    အမည်
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Unit
+                                    ယူနစ်
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Quantity
+                                    ပမာဏ
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Unit Price
+                                    ယူနစ်စျေးနှုန်း
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Low Stock Alert
+                                    ပစ္စည်းပြတ်လပ်သတိပေးချက်
                                 </th>
                                 <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
+                                    <span class="sr-only">တည်းဖြတ်ရန်</span>
                                 </th>
                             </tr>
                         </thead>
@@ -73,11 +73,11 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" class="text-indigo-600 hover:text-indigo-900">တည်းဖြတ်ရန်</a>
                                         <form action="{{ route('admin.ingredients.destroy', $ingredient->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900 ml-4">ဖျက်ပစ်ပါ</button>
                                         </form>
                                     </td>
                                 </tr>

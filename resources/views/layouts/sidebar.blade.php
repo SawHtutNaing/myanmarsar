@@ -51,14 +51,14 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Dashboard</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဒိုင်ခွက်</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.ingredients.index')" :active="request()->routeIs('admin.ingredients.*')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Ingredients</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ပါဝင်ပစ္စည်းများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.fooditems.index')" :active="request()->routeIs('admin.fooditems.*')" class="flex items-center px-3 py-2">
@@ -67,7 +67,7 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Food Items</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အစားအစာများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')" class="flex items-center px-3 py-2">
@@ -75,7 +75,7 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Orders</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အော်ဒါများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.*')" class="flex items-center px-3 py-2">
@@ -84,7 +84,7 @@
                     <path d="M20 15h2V4H2v11c0 1.1.9 2 2 2h2"></path>
                     <rect x="2" y="2" width="20" height="2" rx="1" ry="1"></rect>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Tables</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">စားပွဲများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.expense_groups.index')" :active="request()->routeIs('admin.expense_groups.*')" class="flex items-center px-3 py-2">
@@ -92,7 +92,7 @@
                     <line x1="12" y1="1" x2="12" y2="23"></line>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Expense Groups</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကုန်ကျစရိတ်အုပ်စုများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.expense_details.index')" :active="request()->routeIs('admin.expense_details.*')" class="flex items-center px-3 py-2">
@@ -102,7 +102,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Expense Details</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကုန်ကျစရိတ်အသေးစိတ်</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')" class="flex items-center px-3 py-2">
@@ -110,14 +110,14 @@
                     <path d="M3 3v18h18"></path>
                     <path d="M18.7 8.3L12 15 7.1 10.1M9 17h12"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Sales Report</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အရောင်းအစီရင်ခံစာ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.reports.profit_loss')" :active="request()->routeIs('admin.reports.profit_loss')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M13 17h6v2h-6v4H8V17H2v-2h6V1h5v16z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Profit & Loss</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အမြတ်နှင့်အရှုံး</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.reports.table_bill_outs.index')" :active="request()->routeIs('admin.reports.table_bill_outs.*')" class="flex items-center px-3 py-2">
@@ -134,7 +134,7 @@
         <line x1="8" y1="13" x2="16" y2="13"></line>
         <line x1="8" y1="17" x2="14" y2="17"></line>
     </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Bill Out Records</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဘေလ်ထုတ်မှတ်တမ်းများ</span>
             </x-nav-link>
             <x-nav-link :href="route('admin.reports.ingredient-imports')" :active="request()->routeIs('reports.ingredient-imports')" class="flex items-center px-3 py-2">
                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300"
@@ -149,7 +149,7 @@
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
     </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Import Reports </span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">သွင်းကုန်အစီရင်ခံစာများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('users.index')" class="flex items-center px-3 py-2">
@@ -159,7 +159,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">User Management </span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အသုံးပြုသူစီမံခန့်ခွဲမှု</span>
             </x-nav-link>
 
 
@@ -172,7 +172,7 @@
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21.2 15.8l-1.4 1.4L18 14.1V22h-2V14.1L12.2 17.2l-1.4-1.4L14 12 9.4 7.4l1.4-1.4L16 9.9V2h2v7.9l4.6-4.6z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Ingredient Import</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ပါဝင်ပစ္စည်း တင်သွင်းခြင်း</span>
             </x-nav-link>
 
             <x-nav-link :href="route('supplier.reports.ingredient-imports')" :active="request()->routeIs('supplier.reports.ingredient-imports')" class="flex items-center px-3 py-2">
@@ -182,7 +182,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Import Reports</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">သွင်းကုန်အစီရင်ခံစာများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('supplier.expense_groups.index')" :active="request()->routeIs('supplier.expense_groups.*')" class="flex items-center px-3 py-2">
@@ -190,7 +190,7 @@
                     <line x1="12" y1="1" x2="12" y2="23"></line>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Expense Groups</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကုန်ကျစရိတ်အုပ်စုများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('supplier.expense_details.index')" :active="request()->routeIs('supplier.expense_details.*')" class="flex items-center px-3 py-2">
@@ -200,7 +200,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Expense Details</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကုန်ကျစရိတ်အသေးစိတ်</span>
             </x-nav-link>
         @endif
 
@@ -211,7 +211,7 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Dashboard</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဒိုင်ခွက်</span>
             </x-nav-link>
 
             <x-nav-link :href="route('waiter.menu')" :active="request()->routeIs('waiter.menu')" class="flex items-center px-3 py-2">
@@ -223,7 +223,7 @@
                     <line x1="3" y1="12" x2="3.01" y2="12"></line>
                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Menu</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">မီနူး</span>
             </x-nav-link>
 
             <x-nav-link :href="route('waiter.tables.index')" :active="request()->routeIs('waiter.tables.*')" class="flex items-center px-3 py-2">
@@ -232,7 +232,7 @@
                     <path d="M20 15h2V4H2v11c0 1.1.9 2 2 2h2"></path>
                     <rect x="2" y="2" width="20" height="2" rx="1" ry="1"></rect>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Tables</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">စားပွဲများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('waiter.my-orders')" :active="request()->routeIs('waiter.my-orders')" class="flex items-center px-3 py-2">
@@ -240,14 +240,14 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">My Orders</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကျွန်ုပ်၏ အော်ဒါများ</span>
             </x-nav-link>
 
             <x-nav-link :href="route('waiter.order-history')" :active="request()->routeIs('waiter.order-history')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Order History</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အော်ဒါမှတ်တမ်း</span>
             </x-nav-link>
 
             <x-nav-link :href="route('waiter.reports.bill_outs.index')" :active="request()->routeIs('waiter.reports.bill_outs.index')" class="flex items-center px-3 py-2">
@@ -257,7 +257,7 @@
                     <line x1="8" y1="13" x2="16" y2="13"></line>
                     <line x1="8" y1="17" x2="14" y2="17"></line>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Bill Out Records</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဘေလ်ထုတ်မှတ်တမ်းများ</span>
             </x-nav-link>
         @endif
 
@@ -268,7 +268,7 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Dashboard</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဒိုင်ခွက်</span>
             </x-nav-link>
 
             <x-nav-link :href="route('kitchen.orders')" :active="request()->routeIs('kitchen.orders')" class="flex items-center px-3 py-2">
@@ -276,7 +276,7 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">Orders</span>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အော်ဒါများ</span>
             </x-nav-link>
         @endif
     </nav>

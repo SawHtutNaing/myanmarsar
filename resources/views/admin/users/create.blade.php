@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create New User') }}
+            {{ __('အသုံးပြုသူအသစ်ဖန်တီးပါ။') }}
         </h2>
     </x-slot>
 
@@ -15,7 +15,7 @@
 
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                {{ __('Create User') }}
+                                {{ __('အသုံးပြုသူဖန်တီးပါ။') }}
                             </button>
                         </div>
                     </form>
