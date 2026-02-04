@@ -109,7 +109,7 @@ Route::middleware(['auth', 'role:kitchen'])->prefix('kitchen')->name('kitchen.')
     Route::get('/orders/fetch', [KitchenController::class, 'fetchOrders'])->name('orders.fetch');
     Route::post('/orders/{orderItemId}/complete-item', [KitchenController::class, 'completeOrderItem'])->name('orders.complete-item');
     Route::post('/orders/{orderId}/complete', [KitchenController::class, 'completeOrder'])->name('orders.complete-order');
-    Route::get('/food-item-orders', [KitchenController::class, 'foodItesmOrdersIndex'])->name('food-item-orders.index');
+    Route::get('/food-item-orders', [KitchenController::class, 'foodItemOrdersIndex'])->name('food-item-orders.index');
 });
 
 require __DIR__.'/auth.php';
