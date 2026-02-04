@@ -24,6 +24,33 @@
 
 
 
+                    {{-- Grand Totals Summary Table (for Quantity only) --}}
+                    <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-sm">
+                        <h4 class="text-md font-semibold mb-3">Overall Totals:</h4>
+                        @php
+                            $grandTotalQuantity = 0;
+                            foreach ($foodItemOrders as $item) {
+                                $grandTotalQuantity += $item->total_quantity;
+                            }
+                        @endphp
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                        Total Quantity
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ number_format($grandTotalQuantity) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     {{-- Filter Form --}}
                     <form action="{{ route('kitchen.food-item-orders.index') }}" method="GET" class="mb-4">
                         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
