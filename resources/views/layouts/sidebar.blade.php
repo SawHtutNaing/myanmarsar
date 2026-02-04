@@ -78,6 +78,14 @@
                 <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အော်ဒါများ</span>
             </x-nav-link>
 
+            <x-nav-link :href="route('admin.food-item-orders.index')" :active="request()->routeIs('admin.food-item-orders.*')" class="flex items-center px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 11H5c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2z"></path>
+                    <polyline points="7 7 12 2 17 7"></polyline>
+                </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဟင်းပွဲ အော်ဒါများ</span>
+            </x-nav-link>
+
             <x-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.*')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 15h2c1.1 0 2-.9 2-2V2H2v11c0 1.1.9 2 2 2h2"></path>
@@ -243,6 +251,14 @@
                 <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကျွန်ုပ်၏ အော်ဒါများ</span>
             </x-nav-link>
 
+            <x-nav-link :href="route('waiter.food-item-orders.index')" :active="request()->routeIs('waiter.food-item-orders.index')" class="flex items-center px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 11H5c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2z"></path>
+                    <polyline points="7 7 12 2 17 7"></polyline>
+                </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ကျွန်ုပ်၏ ဟင်းပွဲ အော်ဒါများ</span>
+            </x-nav-link>
+
             <x-nav-link :href="route('waiter.order-history')" :active="request()->routeIs('waiter.order-history')" class="flex items-center px-3 py-2">
                 <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
@@ -277,6 +293,14 @@
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
                 <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">အော်ဒါများ</span>
+            </x-nav-link>
+
+            <x-nav-link :href="route('kitchen.food-item-orders.index')" :active="request()->routeIs('kitchen.food-item-orders.index')" class="flex items-center px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 transition-all duration-300" :class="{'mr-3': sidebarOpen}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 11H5c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2z"></path>
+                    <polyline points="7 7 12 2 17 7"></polyline>
+                </svg>
+                <span x-show="sidebarOpen" class="whitespace-nowrap transition-all duration-300">ဟင်းပွဲ အော်ဒါများ</span>
             </x-nav-link>
         @endif
     </nav>

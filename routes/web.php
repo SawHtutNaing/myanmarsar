@@ -38,6 +38,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/reports/ingredient-imports/{id}', [ReportController::class, 'destroyIngredientImport'])->name('reports.ingredient-imports.destroy');
     Route::get('/reports/table-bill-outs', [\App\Http\Controllers\Admin\TableBillOutRecordController::class, 'index'])->name('reports.table_bill_outs.index');
     Route::get('/orders', [AdminController::class, 'ordersIndex'])->name('orders.index');
+    Route::get('/food-item-orders', [AdminController::class, 'foodItemOrdersIndex'])->name('food-item-orders.index');
 
     Route::patch('/order-items/{orderItem}/cancel', [AdminController::class, 'cancelOrderItem'])->name('order_items.cancel');
     Route::patch('/orders/{order}/cancel', [AdminController::class, 'cancelOrder'])->name('orders.cancel');
@@ -98,6 +99,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/fetch-statuses', [TableController::class, 'fetchTableStatuses'])->name('tables.fetch-statuses');
     Route::post('/orders/items/{id}/take', [WaiterController::class, 'takeOrderItem'])->name('orders.items.take');
     Route::post('/orders/{order}/take-all', [WaiterController::class, 'takeAll'])->name('orders.take-all');
+    Route::get('/food-item-orders', [WaiterController::class, 'foodItemOrdersIndex'])->name('food-item-orders.index');
 });
 
 // Kitchen Routes
@@ -107,6 +109,7 @@ Route::middleware(['auth', 'role:kitchen'])->prefix('kitchen')->name('kitchen.')
     Route::get('/orders/fetch', [KitchenController::class, 'fetchOrders'])->name('orders.fetch');
     Route::post('/orders/{orderItemId}/complete-item', [KitchenController::class, 'completeOrderItem'])->name('orders.complete-item');
     Route::post('/orders/{orderId}/complete', [KitchenController::class, 'completeOrder'])->name('orders.complete-order');
+    Route::get('/food-item-orders', [KitchenController::class, 'foodItemOrdersIndex'])->name('food-item-orders.index');
 });
 
 require __DIR__.'/auth.php';

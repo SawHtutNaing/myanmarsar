@@ -39,6 +39,9 @@
                         <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')">
                             {{ __('အော်ဒါများ') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.food-item-orders.index')" :active="request()->routeIs('admin.food-item-orders.index')">
+                            {{ __('ဟင်းပွဲ အော်ဒါများ') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.reports.table_bill_outs.index')" :active="request()->routeIs('admin.reports.table_bill_outs.index')">
                             {{ __('စားပွဲဘေလ်') }}
                         </x-nav-link>
@@ -80,12 +83,18 @@
                         <x-nav-link :href="route('waiter.tables.index')" :active="request()->routeIs('waiter.tables.index')">
                             {{ __('စားပွဲများ') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('waiter.food-item-orders.index')" :active="request()->routeIs('waiter.food-item-orders.index')">
+                            {{ __('ကျွန်ုပ်၏ ဟင်းပွဲ အော်ဒါများ') }}
+                        </x-nav-link>
                     @elseif(Auth::user()->hasRole('kitchen'))
                         <x-nav-link :href="route('kitchen.dashboard')" :active="request()->routeIs('kitchen.dashboard')">
                             {{ __('ဒိုင်ခွက်') }}
                         </x-nav-link>
                         <x-nav-link :href="route('kitchen.orders')" :active="request()->routeIs('kitchen.orders')">
                             {{ __('အော်ဒါများ') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('kitchen.food-item-orders.index')" :active="request()->routeIs('kitchen.food-item-orders.index')">
+                            {{ __('ဟင်းပွဲ အော်ဒါများ') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -156,6 +165,12 @@
                 <x-responsive-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
                     {{ __('စားပွဲများ') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')">
+                    {{ __('အော်ဒါများ') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.food-item-orders.index')" :active="request()->routeIs('admin.food-item-orders.index')">
+                    {{ __('ဟင်းပွဲ အော်ဒါများ') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.reports.sales')" :active="request()->routeIs('admin.reports.sales')">
                     {{ __('အရောင်းအစီရင်ခံစာ') }}
                 </x-responsive-nav-link>
@@ -169,9 +184,27 @@
                 <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
                     {{ __('ဒိုင်ခွက်') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('waiter.menu')" :active="request()->routeIs('waiter.menu')">
+                    {{ __('မီနူး') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('waiter.my-orders')" :active="request()->routeIs('waiter.my-orders')">
+                    {{ __('ကျွန်ုပ်၏ အော်ဒါများ') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('waiter.tables.index')" :active="request()->routeIs('waiter.tables.index')">
+                    {{ __('စားပွဲများ') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('waiter.food-item-orders.index')" :active="request()->routeIs('waiter.food-item-orders.index')">
+                    {{ __('ကျွန်ုပ်၏ ဟင်းပွဲ အော်ဒါများ') }}
+                </x-responsive-nav-link>
             @elseif(Auth::user()->hasRole('kitchen'))
                 <x-responsive-nav-link :href="route('kitchen.dashboard')" :active="request()->routeIs('kitchen.dashboard')">
                     {{ __('ဒိုင်ခွက်') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kitchen.orders')" :active="request()->routeIs('kitchen.orders')">
+                    {{ __('အော်ဒါများ') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kitchen.food-item-orders.index')" :active="request()->routeIs('kitchen.food-item-orders.index')">
+                    {{ __('ဟင်းပွဲ အော်ဒါများ') }}
                 </x-responsive-nav-link>
             @endif
         </div>

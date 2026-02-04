@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class WaiterController extends Controller
 {
@@ -410,5 +411,44 @@ class WaiterController extends Controller
 
         $orders = $query->latest()->get();
         return response()->json($orders);
+    }
+
+    public function foodItemOrdersIndex(Request $request)
+    {
+        $query = DB::table('order_items')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('food_items', 'order_items.food_item_id', '=', 'food_items.id')
+            ->where('orders.user_id', Auth::id()) // Filter by authenticated user
+            ->select(
+                'food_items.name as food_item_name',
+                'order_items.status as item_status',
+                DB::raw('SUM(order_items.quantity) as total_quantity')
+            )
+            ->groupBy('food_items.id', 'food_items.name', 'order_items.status')
+            ->orderBy('food_item_name');
+
+        // Apply filters
+        if ($request->has('start_date') && $request->input('start_date') != '') {
+            $query->whereDate('orders.created_at', '>=', $request->input('start_date'));
+        }
+        if ($request->has('end_date') && $request->input('end_date') != '') {
+            $query->whereDate('orders.created_at', '<=', $request->input('end_date'));
+        }
+        if ($request->has('order_status') && $request->input('order_status') != '') {
+            $query->where('order_items.status', $request->input('order_status'));
+        }
+        if ($request->has('table_number') && $request->input('table_number') != '') {
+            $query->where('orders.table_number', $request->input('table_number'));
+        }
+        if ($request->has('food_item_name') && $request->input('food_item_name') != '') {
+            $query->where('food_items.name', 'like', '%' . $request->input('food_item_name') . '%');
+        }
+
+        $foodItemOrders = $query->paginate(30);
+
+        // Get unique order statuses for filter dropdown
+        $statuses = DB::table('order_items')->select('status')->distinct()->pluck('status');
+
+        return view('waiter.food_item_orders.index', compact('foodItemOrders', 'statuses'));
     }
 }
