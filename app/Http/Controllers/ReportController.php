@@ -92,24 +92,25 @@ class ReportController extends Controller
             $query->whereDate('date', '<=', $request->end_date);
         }
 
-        // Sorted desc by date so first() per group = the most-recent import
-        $imports = $query->orderBy('date', 'desc')->get();
+      $imports = $query->orderBy('date', 'desc')->get();
 
-        $grouped = $imports
-            ->groupBy('ingredient_id')
-            ->map(function ($rows) {
-                $ingredient = $rows->first()->ingredient;
-                return [
-                    'sort_no'         => optional($ingredient)->sort_no ?? 9999,
-                    'name'            => optional($ingredient)->name    ?? '(unknown)',
-                    'unit'            => optional($ingredient)->unit    ?? '',
-                    'total_quantity'  => $rows->sum('quantity'),
-                    'last_unit_price' => $rows->first()->unit_price,  // most-recent price
-                    'total_cost'      => $rows->sum(fn($i) => $i->quantity * $i->unit_price),
-                ];
-            })
-            ->sortBy('sort_no')
-            ->values();
+// Key imports by ingredient_id for easy lookup
+$importsByIngredient = $imports->groupBy('ingredient_id');
+
+// Get ALL ingredients sorted by sort_no
+$allIngredients = \App\Models\Ingredient::orderBy('sort_no')->get();
+
+$grouped = $allIngredients->map(function ($ingredient) use ($importsByIngredient) {
+    $rows = $importsByIngredient->get($ingredient->id, collect());
+    return [
+        'sort_no'         => $ingredient->sort_no,
+        'name'            => $ingredient->name,
+        'unit'            => $ingredient->unit,
+        'total_quantity'  => $rows->sum('quantity'),
+        'last_unit_price' => $rows->isNotEmpty() ? $rows->first()->unit_price : $ingredient->unit_price,
+        'total_cost'      => $rows->sum(fn($i) => $i->quantity * $i->unit_price),
+    ];
+})->values();
 
         // ── 2. Build spreadsheet ──────────────────────────────────────────────
         $spreadsheet = $this->buildIngredientImportSpreadsheet(
