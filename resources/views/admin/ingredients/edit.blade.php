@@ -12,28 +12,45 @@
                     <form action="{{ route('admin.ingredients.update', $ingredient->id) }}" method="POST">
                         @csrf
                         @method('PUT')
+
+                        {{-- Sort No: display only, not editable --}}
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">အစီအစဉ်နံပါတ် (Sort No)</label>
+                            <p class="mt-1 text-sm text-gray-600 bg-gray-100 rounded px-3 py-2 w-full">
+                                {{ $ingredient->sort_no }}
+                                <span class="text-xs text-gray-400 ml-2">(Index စာမျက်နှာတွင် ဆွဲ‌ဖြင့် ပြောင်းနိုင်သည်)</span>
+                            </p>
+                        </div>
+
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">အမည်</label>
-                            <input type="text" name="name" id="name" value="{{ $ingredient->name }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="text" name="name" id="name" value="{{ $ingredient->name }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
                         <div class="mb-4">
                             <label for="unit" class="block text-sm font-medium text-gray-700">ယူနစ်</label>
-                            <input type="text" name="unit" id="unit" value="{{ $ingredient->unit }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="text" name="unit" id="unit" value="{{ $ingredient->unit }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
                         <div class="mb-4">
                             <label for="quantity" class="block text-sm font-medium text-gray-700">ပမာဏ</label>
-                            <input type="text" name="quantity" id="quantity" value="{{ $ingredient->quantity }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="text" name="quantity" id="quantity" value="{{ $ingredient->quantity }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
                         <div class="mb-4">
                             <label for="unit_price" class="block text-sm font-medium text-gray-700">ယူနစ်စျေးနှုန်း</label>
-                            <input type="number" step="0.01" name="unit_price" id="unit_price" value="{{ $ingredient->unit_price }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="number" step="0.01" name="unit_price" id="unit_price" value="{{ $ingredient->unit_price }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
                         <div class="mb-4">
                             <label for="low_stock_alert_quantity" class="block text-sm font-medium text-gray-700">ပစ္စည်းပြတ်လပ်သတိပေး ပမာဏ</label>
-                            <input type="number" step="0.01" name="low_stock_alert_quantity" id="low_stock_alert_quantity" value="{{ $ingredient->low_stock_alert_quantity }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="number" step="0.01" name="low_stock_alert_quantity" id="low_stock_alert_quantity"
+                                   value="{{ $ingredient->low_stock_alert_quantity }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         </div>
                         <div>
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 အပ်ဒိတ်လုပ်ပါ
                             </button>
                         </div>

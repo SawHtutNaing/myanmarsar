@@ -112,4 +112,16 @@ Route::middleware(['auth', 'role:kitchen'])->prefix('kitchen')->name('kitchen.')
     Route::get('/food-item-orders', [KitchenController::class, 'foodItemOrdersIndex'])->name('food-item-orders.index');
 });
 
+Route::post('ingredients/reorder', [IngredientController::class, 'reorder'])
+    ->name('admin.ingredients.reorder');
+
+// Ingredient import report – Excel export
+Route::get('reports/ingredient-imports/export', [ReportController::class, 'exportIngredientImports'])
+    ->name('admin.reports.ingredient-imports.export');
+
+// IMPORTANT: place the reorder and export routes BEFORE the resource route
+// so they are not captured by the {id} wildcard.
+
+Route::resource('ingredients', IngredientController::class)
+    ->names('admin.ingredients');
 require __DIR__.'/auth.php';

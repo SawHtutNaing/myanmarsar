@@ -11,6 +11,7 @@ class Ingredient extends Model
     use HasFactory;
 
     protected $fillable = [
+        'sort_no',
         'name',
         'unit',
         'quantity',
@@ -26,4 +27,3 @@ class Ingredient extends Model
         return $this->belongsToMany(FoodItem::class)->withPivot('quantity');
     }
 }
-
